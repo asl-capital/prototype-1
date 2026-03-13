@@ -13,6 +13,7 @@ import PhoneRegistration from "./pages/PhoneRegistration";
 import OTPVerification from "./pages/OTPVerification";
 import NafathConfirmation from "./pages/NafathConfirmation";
 import PropertySync from "./pages/PropertySync";
+import CreditScoring from "./pages/CreditScoring";
 
 // Main app screens (authenticated)
 import PropertiesDashboard from "./pages/PropertiesDashboard";
@@ -43,6 +44,7 @@ function Router() {
       <Route path="/otp" component={OTPVerification} />
       <Route path="/nafath" component={NafathConfirmation} />
       <Route path="/sync" component={PropertySync} />
+      <Route path="/credit-scoring" component={CreditScoring} />
       
       {/* Main app - authenticated area */}
       <Route path="/chat" component={Chat} />

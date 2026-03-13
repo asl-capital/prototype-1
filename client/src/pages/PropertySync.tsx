@@ -14,7 +14,7 @@ type SyncState = 'loading' | 'success' | 'error';
 
 export default function PropertySync() {
   const [, navigate] = useLocation();
-  const { setIsAuthenticated, setCurrentFlow } = useAppState();
+  const { } = useAppState();
   const [state, setState] = useState<SyncState>('loading');
   const [progress, setProgress] = useState(0);
   
@@ -36,17 +36,15 @@ export default function PropertySync() {
     }
   }, [state]);
   
-  // Navigate after success
+  // Navigate after success — go to credit scoring screen (Fix 6)
   useEffect(() => {
     if (state === 'success') {
       const timer = setTimeout(() => {
-        setIsAuthenticated(true);
-        setCurrentFlow('main');
-        navigate('/chat');
+        navigate('/credit-scoring');
       }, 1500);
       return () => clearTimeout(timer);
     }
-  }, [state, navigate, setIsAuthenticated, setCurrentFlow]);
+  }, [state, navigate]);
   
   const handleRetry = () => {
     setState('loading');

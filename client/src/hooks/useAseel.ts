@@ -601,7 +601,14 @@ export function useAseel({ properties, loans, creditProfile, userName }: UseAsee
   const disablePreviousCTAs = useCallback(() => {
     updateMessages((prev) =>
       prev.map((m) =>
-        m.cta ? { ...m, cta: m.cta.map((c) => ({ ...c, disabled: true })) } : m
+        m.cta ? {
+          ...m,
+          cta: m.cta.map((c) => {
+            // FIX 3.2: Never disable the Najiz signing button at contract_preview stage
+            if (c.action === 'start_najiz') return c;
+            return { ...c, disabled: true };
+          }),
+        } : m
       )
     );
   }, [updateMessages]);
@@ -749,25 +756,29 @@ Do NOT ask "do you have a question?" — the user already asked one, just answer
             break;
           }
 
-          // ---- Proceed to disclosures ----
+          // ---- Proceed to disclosures (FIX 2: Show T&C modal card) ----
           case 'proceed_disclosures': {
-            addUserMessage(lang === 'ar' ? 'متابعة' : 'Continue');
+            addUserMessage(lang === 'ar' ? 'المتابعة للإفصاحات' : 'Proceed to Disclosures');
 
             const newState: ConversationState = { ...currentState, stage: 'disclosures' };
             updateState(newState);
 
-            const cta: CTAButton[] = [{
-              id: nanoid(),
-              label: lang === 'ar' ? 'أوافق وأتابع' : 'I Agree & Continue',
-              action: 'accept_disclosures',
-              variant: 'primary',
-            }];
+            const selectedProp = properties.find((p) => p.id === currentState.selectedPropertyId);
+            const tcCard: CardData = {
+              type: 'terms_and_conditions',
+              payload: {
+                userName: userName,
+                propertyTitle: selectedProp?.title || '',
+                loanAmount: currentState.loanAmount || 500000,
+                loanTenor: currentState.loanTenor || 5,
+              },
+            };
 
             const msg = lang === 'ar'
-              ? `تمويلك يعتمد على مرابحة السلع مع رهن العقار كضمان، بفائدة ثابتة تقريبية ٧.٥٪ سنوياً، مع إمكانية السداد المبكر. هل توافق على الشروط للمتابعة؟`
-              : `Your financing is based on Commodity Murabaha with your property as Rahn collateral, at approximately 7.5% fixed APR, with early repayment option. Do you agree to proceed?`;
+              ? `يرجى مراجعة شروط وأحكام عقد التمويل أدناه بعناية قبل الموافقة.`
+              : `Please carefully review the financing terms and conditions below before agreeing.`;
 
-            await addAssistantMessageAnimated(msg, undefined, cta);
+            await addAssistantMessageAnimated(msg, tcCard);
             break;
           }
 
@@ -809,7 +820,7 @@ Do NOT ask "do you have a question?" — the user already asked one, just answer
             break;
           }
 
-          // ---- Show contract ----
+          // ---- Show contract (FIX 3: contract card + always-active Najiz button) ----
           case 'show_contract': {
             addUserMessage(lang === 'ar' ? 'عرض العقد' : 'View contract');
 
@@ -822,9 +833,15 @@ Do NOT ask "do you have a question?" — the user already asked one, just answer
 
             const contractCard: CardData = {
               type: 'contract',
-              payload: { amount, tenor, monthlyPayment: loanCalc.monthlyPayment },
+              payload: {
+                amount,
+                tenor,
+                monthlyPayment: loanCalc.monthlyPayment,
+                userName: userName,
+              },
             };
 
+            // FIX 3.2: Najiz button is always present and never disabled
             const cta: CTAButton[] = [{
               id: nanoid(),
               label: lang === 'ar' ? 'توقيع إلكتروني عبر ناجز' : 'E-Sign via Najiz',
@@ -833,71 +850,100 @@ Do NOT ask "do you have a question?" — the user already asked one, just answer
             }];
 
             const msg = lang === 'ar'
-              ? `العقد جاهز للمراجعة. يمكنك الاطلاع على جميع البنود قبل التوقيع.`
-              : `The contract is ready for review. You can review all terms before signing.`;
+              ? `العقد جاهز للمراجعة. يمكنك الاطلاع على العقد الكامل أو المتابعة للتوقيع.`
+              : `The contract is ready for review. You can view the full contract or proceed to signing.`;
 
             await addAssistantMessageAnimated(msg, contractCard, cta);
             break;
           }
 
-          // ---- Start Najiz e-sign ----
+          // ---- FIX 3.1: View full contract modal (from button or typed) ----
+          case 'view_contract':
+          case 'view_full_contract': {
+            const amount3 = currentState.loanAmount || 500000;
+            const tenor3 = currentState.loanTenor || 5;
+            const loanCalc3 = calculateLoan(amount3, tenor3);
+            const selectedProp3 = properties.find((p) => p.id === currentState.selectedPropertyId);
+            const refNum = `ASL-2026-${Date.now().toString(36).toUpperCase().slice(-5)}`;
+
+            const fullContractCard: CardData = {
+              type: 'full_contract',
+              payload: {
+                userName: userName,
+                propertyTitle: selectedProp3?.title || '',
+                loanAmount: amount3,
+                loanTenor: tenor3,
+                monthlyPayment: loanCalc3.monthlyPayment,
+                totalPayment: loanCalc3.totalPayment,
+                totalProfit: loanCalc3.totalProfit,
+                apr: loanCalc3.apr,
+                referenceNumber: refNum,
+              },
+            };
+
+            // FIX 3.2: Najiz button always stays active
+            const cta3: CTAButton[] = [{
+              id: nanoid(),
+              label: lang === 'ar' ? 'توقيع إلكتروني عبر ناجز' : 'E-Sign via Najiz',
+              action: 'start_najiz',
+              variant: 'primary',
+            }];
+
+            const msg3 = lang === 'ar'
+              ? `هذا هو العقد الكامل للمراجعة. يمكنك المتابعة للتوقيع عبر ناجز بعد الاطلاع.`
+              : `Here is the full contract for review. You can proceed to sign via Najiz after reviewing.`;
+
+            await addAssistantMessageAnimated(msg3, fullContractCard, cta3);
+            break;
+          }
+
+          // ---- FIX 5: Start Najiz e-sign (2-screen modal flow) ----
           case 'start_najiz': {
             addUserMessage(lang === 'ar' ? 'بدء التوقيع' : 'Start signing');
 
             const newState: ConversationState = { ...currentState, stage: 'najiz_esign' };
             updateState(newState);
 
-            const najizCard: CardData = { type: 'action_najiz', payload: { completed: false } };
+            const najizCard: CardData = {
+              type: 'najiz_signing_flow',
+              payload: { completed: false },
+            };
 
             const msg = lang === 'ar'
-              ? `سيتم تحويلك إلى منصة ناجز الحكومية للتوقيع الإلكتروني الآمن.`
-              : `You'll be redirected to the Najiz government platform for secure e-signing.`;
+              ? `يرجى إكمال توقيع صك الرهن عبر منصة ناجز لإتمام عملية التمويل.`
+              : `Please complete the mortgage deed signing via Najiz platform to finalize the financing.`;
 
             await addAssistantMessageAnimated(msg, najizCard);
-
-            setTimeout(() => {
-              updateMessages((prev) =>
-                prev.map((m) =>
-                  m.card?.type === 'action_najiz'
-                    ? { ...m, card: { ...m.card, payload: { completed: true } } }
-                    : m
-                )
-              );
-
-              const completedState: ConversationState = {
-                ...conversationStateRef.current,
-                stage: 'sharia_execution',
-                najizCompleted: true,
-              };
-              updateState(completedState);
-
-              const cta: CTAButton[] = [{
-                id: nanoid(),
-                label: lang === 'ar' ? 'تنفيذ العقد الشرعي' : 'Execute Sharia Contract',
-                action: 'start_sharia',
-                variant: 'primary',
-              }];
-
-              const successContent = lang === 'ar'
-                ? 'تم التوقيع الإلكتروني بنجاح عبر ناجز! الخطوة التالية هي التنفيذ الشرعي لعقد المرابحة.'
-                : 'E-signature completed successfully via Najiz! Next step is the Sharia execution of the Murabaha contract.';
-
-              updateMessages((prev) => [
-                ...prev,
-                {
-                  id: nanoid(),
-                  role: 'assistant' as const,
-                  content: successContent,
-                  timestamp: new Date(),
-                  cta,
-                },
-              ]);
-              setIsLoading(false);
-            }, 2500);
+            // The card itself will handle the flow and call onAction('najiz_completed') when done
+            setIsLoading(false);
             return;
           }
 
-          // ---- Start Sharia execution (with animated visualization) ----
+          // ---- FIX 5: Najiz completed callback from the card ----
+          case 'najiz_completed': {
+            const completedState: ConversationState = {
+              ...conversationStateRef.current,
+              stage: 'sharia_execution',
+              najizCompleted: true,
+            };
+            updateState(completedState);
+
+            const cta: CTAButton[] = [{
+              id: nanoid(),
+              label: lang === 'ar' ? 'تنفيذ العقد الشرعي' : 'Execute Sharia Contract',
+              action: 'start_sharia',
+              variant: 'primary',
+            }];
+
+            const successContent = lang === 'ar'
+              ? 'تم التوقيع الإلكتروني بنجاح عبر ناجز! الخطوة التالية هي التنفيذ الشرعي لعقد التورق/المرابحة.'
+              : 'E-signature completed successfully via Najiz! Next step is the Sharia execution of the Tawarruq/Murabaha contract.';
+
+            await addAssistantMessageAnimated(successContent, undefined, cta);
+            break;
+          }
+
+          // ---- FIX 4: Start Sharia execution (corrected Tawarruq/Murabaha visualization) ----
           case 'start_sharia': {
             disablePreviousCTAs();
             addUserMessage(lang === 'ar' ? 'تنفيذ العقد الشرعي' : 'Execute Sharia contract');
@@ -908,22 +954,22 @@ Do NOT ask "do you have a question?" — the user already asked one, just answer
             };
             updateState(newState);
 
-            // Show the animated Murabaha visualization card
+            // FIX 4: Use corrected Tawarruq/Murabaha steps
             const shariaCard: CardData = {
               type: 'sharia_visualization',
               payload: {
-                contractType: 'murabaha', // or 'tawarruq'
+                contractType: 'tawarruq_murabaha',
                 completed: false,
               },
             };
 
             const msg = lang === 'ar'
-              ? `جاري تنفيذ عقد المرابحة الشرعي. تابع الخطوات أدناه.`
-              : `Executing the Sharia Murabaha contract. Follow the steps below.`;
+              ? `جاري تنفيذ التمويل المتوافق مع الشريعة. تابع الخطوات أدناه.`
+              : `Executing Sharia-compliant financing. Follow the steps below.`;
 
             await addAssistantMessageAnimated(msg, shariaCard);
 
-            // After animation completes (5 steps × 1 second + buffer)
+            // After animation completes (5 steps × 1.2s + buffer)
             setTimeout(() => {
               const completedState: ConversationState = {
                 ...conversationStateRef.current,
@@ -934,14 +980,14 @@ Do NOT ask "do you have a question?" — the user already asked one, just answer
 
               const cta: CTAButton[] = [{
                 id: nanoid(),
-                label: lang === 'ar' ? 'تأكيد الصرف' : 'Confirm Disbursement',
+                label: lang === 'ar' ? 'متابعة لصرف السيولة' : 'Proceed to Disbursement',
                 action: 'confirm_disbursement',
                 variant: 'success',
               }];
 
               const successContent = lang === 'ar'
-                ? 'تم تنفيذ عقد المرابحة الشرعية بنجاح! كل شيء جاهز لصرف التمويل.'
-                : 'Sharia Murabaha contract executed successfully! Everything is ready for disbursement.';
+                ? 'تم تنفيذ التمويل بنجاح! جاهز لصرف السيولة إلى حسابك.'
+                : 'Financing executed successfully! Ready to disburse funds to your account.';
 
               updateMessages((prev) => [
                 ...prev,
@@ -954,7 +1000,7 @@ Do NOT ask "do you have a question?" — the user already asked one, just answer
                 },
               ]);
               setIsLoading(false);
-            }, 7000); // 5 steps × 1s + 2s buffer
+            }, 8000); // 5 steps × 1.2s + 2s buffer
             return;
           }
 
@@ -1256,7 +1302,7 @@ Do NOT ask "do you have a question?" — the user already asked one, just answer
             break;
         }
       } finally {
-        if (action !== 'start_najiz' && action !== 'start_sharia') {
+        if (action !== 'start_najiz' && action !== 'start_sharia' && action !== 'najiz_completed') {
           setIsLoading(false);
         }
       }
@@ -1289,6 +1335,30 @@ Do NOT ask "do you have a question?" — the user already asked one, just answer
       const lang = detectLanguage([...messagesRef.current, { id: '', role: 'user', content: text, timestamp: new Date() }]);
       const intent = classifyIntent(text, currentState.stage);
       console.log('[ASEEL] handleUserMessage:', { text, stage: currentState.stage, intent, lang });
+
+      // ---- FIX 1: PROPERTY SELECTION: match typed property names ----
+      if (currentState.stage === 'property_selection') {
+        const qualifiedProps = properties.filter((p) => p.qualificationStatus !== 'not_qualified');
+        const normalizedInput = text.trim().replace(/\s+/g, ' ');
+        const matchedProp = qualifiedProps.find((p) => {
+          const title = p.title.trim();
+          // Exact match, partial match, or fuzzy contains
+          if (normalizedInput === title) return true;
+          if (normalizedInput.includes(title) || title.includes(normalizedInput)) return true;
+          // Match key words (e.g., "الياسمين" matches "فيلا الياسمين")
+          const inputWords = normalizedInput.split(/\s+/);
+          const titleWords = title.split(/\s+/);
+          return inputWords.some((w) => w.length > 2 && titleWords.some((tw) => tw.includes(w) || w.includes(tw)));
+        });
+
+        if (matchedProp) {
+          addUserMessage(text);
+          // Trigger the same flow as the CTA button
+          await handleCTAAction('select_property', { propertyId: matchedProp.id });
+          return;
+        }
+        // If no match, fall through to side question handling
+      }
 
       // ---- LOAN DESIGN: parse amount ----
       if (currentState.stage === 'loan_design') {

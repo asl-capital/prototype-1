@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Building2, CheckCircle2, FileText, Scale, Landmark,
   PartyPopper, Calendar, Shield, TrendingUp, Clock,
   MapPin, CreditCard, Wallet, BadgeCheck, AlertCircle,
+  ChevronDown, ChevronUp, ExternalLink,
 } from 'lucide-react';
 import type { CardData, TimeSlot } from '@/types/chat';
 
@@ -413,7 +414,6 @@ function RevalTimeSlotPickerCard({
   const slots = payload.slots as TimeSlot[];
   const [selectedSlotId, setSelectedSlotId] = useState<string | null>(null);
 
-  // Group slots by date
   const grouped: Record<string, TimeSlot[]> = {};
   for (const slot of slots) {
     if (!grouped[slot.dayLabel]) grouped[slot.dayLabel] = [];
@@ -694,7 +694,6 @@ function CreditSummaryCard({ payload }: { payload: Record<string, unknown> }) {
   const safetyMargin = payload.cashSafetyMargin as number;
   const lastUpdated = payload.lastUpdated as string;
 
-  const scoreColor = score >= 70 ? 'text-green-600' : score >= 50 ? 'text-amber-600' : 'text-red-500';
   const scoreLabel = score >= 70 ? 'ممتاز' : score >= 50 ? 'جيد' : 'يحتاج تحسين';
 
   return (
@@ -702,7 +701,7 @@ function CreditSummaryCard({ payload }: { payload: Record<string, unknown> }) {
       <div className="bg-gradient-to-l from-[#1B4965] to-[#2D5A7B] p-4 text-center">
         <TrendingUp className="w-8 h-8 text-white mx-auto mb-2" />
         <p className="text-white/80 text-xs">تقييمي الائتماني</p>
-        <p className={`text-4xl font-bold text-white mt-1`}>{score}</p>
+        <p className="text-4xl font-bold text-white mt-1">{score}</p>
         <span className={`text-sm font-medium ${score >= 70 ? 'text-green-300' : score >= 50 ? 'text-amber-300' : 'text-red-300'}`}>
           {scoreLabel}
         </span>
@@ -733,265 +732,786 @@ function CreditSummaryCard({ payload }: { payload: Record<string, unknown> }) {
 }
 
 // ============================================
-// SHARIA VISUALIZATION CARD (Murabaha / Tawarruq)
+// ACCORDION SECTION HELPER
 // ============================================
 
-interface ShariaStep {
-  label: string;
-  detail?: string;
-}
-
-function ShariaVisualizationCard({ payload }: { payload: Record<string, unknown> }) {
-  const contractType = (payload.contractType as string) || 'murabaha';
-  const [completedSteps, setCompletedSteps] = useState(0);
-  const [animationDone, setAnimationDone] = useState(false);
-
-  const murabahaSteps: ShariaStep[] = [
-    { label: 'البنك يشتري العقار من البائع', detail: 'Bank purchases property from seller' },
-    { label: 'تحديد هامش الربح', detail: 'Profit margin determined: 7.5%' },
-    { label: 'بيع العقار للعميل بالتقسيط', detail: 'Property sold to client in installments' },
-    { label: 'توقيع عقد المرابحة', detail: 'Murabaha contract signed' },
-    { label: 'اكتمل العقد', detail: 'Contract completed' },
-  ];
-
-  const tawarruqSteps: ShariaStep[] = [
-    { label: 'البنك يشتري سلعة من السوق', detail: 'Bank purchases commodity' },
-    { label: 'بيع السلعة للعميل بالأجل', detail: 'Commodity sold to client on credit' },
-    { label: 'العميل يبيع السلعة نقداً', detail: 'Client sells commodity for cash' },
-    { label: 'العميل يحصل على التمويل النقدي', detail: 'Client receives cash financing' },
-    { label: 'اكتمل التورق', detail: 'Tawarruq completed' },
-  ];
-
-  const steps = contractType === 'tawarruq' ? tawarruqSteps : murabahaSteps;
-  const title = contractType === 'tawarruq' ? 'تنفيذ عقد التورق' : 'تنفيذ عقد المرابحة';
-  const subtitle = contractType === 'tawarruq' ? 'Tawarruq Execution' : 'Murabaha Execution';
-
-  useEffect(() => {
-    if (completedSteps >= steps.length) {
-      setAnimationDone(true);
-      return;
-    }
-
-    const timer = setTimeout(() => {
-      setCompletedSteps((prev) => prev + 1);
-    }, 1200);
-
-    return () => clearTimeout(timer);
-  }, [completedSteps, steps.length]);
-
+function AccordionSection({
+  title,
+  children,
+  defaultOpen = false,
+  highlight = false,
+}: {
+  title: string;
+  children: React.ReactNode;
+  defaultOpen?: boolean;
+  highlight?: boolean;
+}) {
+  const [open, setOpen] = useState(defaultOpen);
   return (
-    <div className="bg-white rounded-xl border border-border/60 shadow-sm overflow-hidden" dir="rtl">
-      {/* Header */}
-      <div className={`p-4 text-center ${
-        animationDone
-          ? 'bg-gradient-to-l from-green-500 to-emerald-600'
-          : 'bg-gradient-to-l from-[#1B4965] to-[#2D5A7B]'
-      } transition-all duration-700`}>
-        <div className="flex items-center justify-center gap-2 mb-1">
-          {animationDone ? (
-            <CheckCircle2 className="w-6 h-6 text-white" />
-          ) : (
-            <Scale className="w-6 h-6 text-white" />
-          )}
-          <h3 className="text-white font-bold text-base">{title}</h3>
-        </div>
-        <p className="text-white/70 text-xs">{subtitle}</p>
-      </div>
-
-      {/* Steps */}
-      <div className="p-4">
-        <div className="relative">
-          {/* Vertical line */}
-          <div className="absolute right-[15px] top-2 bottom-2 w-0.5 bg-gray-200" />
-          {/* Completed portion of line */}
+    <div className={`border-b border-border/40 last:border-0 ${highlight ? 'bg-[#FFF8F0]' : ''}`}>
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between px-4 py-3"
+        dir="rtl"
+      >
+        <span className={`font-bold text-sm ${highlight ? 'text-[#C4956A]' : 'text-foreground'}`}>{title}</span>
+        {open ? (
+          <ChevronUp className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+        ) : (
+          <ChevronDown className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+        )}
+      </button>
+      <AnimatePresence>
+        {open && (
           <motion.div
-            className="absolute right-[15px] top-2 w-0.5 bg-[#1B4965] z-10"
-            initial={{ height: 0 }}
-            animate={{ height: `${Math.min(100, (completedSteps / (steps.length - 1)) * 100)}%` }}
-            transition={{ duration: 0.5, ease: 'easeOut' }}
-          />
-
-          <div className="space-y-4">
-            <AnimatePresence>
-              {steps.map((step, index) => {
-                const isCompleted = index < completedSteps;
-                const isActive = index === completedSteps - 1 && !animationDone;
-                const isPending = index >= completedSteps;
-                const isLast = index === steps.length - 1;
-
-                return (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0.4, x: 10 }}
-                    animate={{
-                      opacity: isCompleted || isActive ? 1 : 0.4,
-                      x: 0,
-                    }}
-                    transition={{ duration: 0.5, delay: 0.1 }}
-                    className="flex items-start gap-3 relative"
-                  >
-                    {/* Step indicator */}
-                    <div className="flex-shrink-0 z-20">
-                      {isCompleted ? (
-                        <motion.div
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                          className={`w-[30px] h-[30px] rounded-full flex items-center justify-center ${
-                            isLast && animationDone
-                              ? 'bg-green-500'
-                              : 'bg-[#1B4965]'
-                          }`}
-                        >
-                          <CheckCircle2 className="w-4 h-4 text-white" />
-                        </motion.div>
-                      ) : isPending ? (
-                        <div className="w-[30px] h-[30px] rounded-full border-2 border-gray-300 bg-white flex items-center justify-center">
-                          <span className="text-xs text-gray-400 font-bold">{index + 1}</span>
-                        </div>
-                      ) : (
-                        <motion.div
-                          animate={{ scale: [1, 1.15, 1] }}
-                          transition={{ repeat: Infinity, duration: 1.5 }}
-                          className="w-[30px] h-[30px] rounded-full bg-[#1B4965]/20 border-2 border-[#1B4965] flex items-center justify-center"
-                        >
-                          <div className="w-2.5 h-2.5 rounded-full bg-[#1B4965]" />
-                        </motion.div>
-                      )}
-                    </div>
-
-                    {/* Step content */}
-                    <div className="flex-1 pt-1">
-                      <p className={`text-sm font-semibold ${
-                        isCompleted
-                          ? isLast && animationDone
-                            ? 'text-green-600'
-                            : 'text-foreground'
-                          : 'text-gray-400'
-                      }`}>
-                        {step.label}
-                        {isLast && isCompleted && ' ✓'}
-                      </p>
-                      {step.detail && (
-                        <p className={`text-[11px] mt-0.5 ${
-                          isCompleted ? 'text-muted-foreground' : 'text-gray-300'
-                        }`}>
-                          {step.detail}
-                        </p>
-                      )}
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </AnimatePresence>
-          </div>
-        </div>
-
-        {/* Success state */}
-        {animationDone && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="mt-4 p-3 bg-green-50 rounded-lg border border-green-200 text-center"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden"
           >
-            <div className="flex items-center justify-center gap-2 text-green-600">
-              <Shield className="w-4 h-4" />
-              <span className="text-sm font-bold">
-                {contractType === 'tawarruq'
-                  ? 'تم تنفيذ عقد التورق بنجاح ✓'
-                  : 'تم تنفيذ العقد الشرعي بنجاح ✓'}
-              </span>
+            <div className="px-4 pb-4 text-xs text-muted-foreground leading-relaxed" dir="rtl">
+              {children}
             </div>
-            <p className="text-xs text-green-600/70 mt-1">متوافق مع أحكام الشريعة الإسلامية</p>
           </motion.div>
         )}
-      </div>
-
-      {/* Progress bar */}
-      {!animationDone && (
-        <div className="px-4 pb-4">
-          <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
-            <motion.div
-              className="h-full bg-[#1B4965] rounded-full"
-              initial={{ width: '0%' }}
-              animate={{ width: `${(completedSteps / steps.length) * 100}%` }}
-              transition={{ duration: 0.5 }}
-            />
-          </div>
-          <p className="text-[10px] text-muted-foreground text-center mt-1">
-            جاري التنفيذ... {completedSteps}/{steps.length}
-          </p>
-        </div>
-      )}
+      </AnimatePresence>
     </div>
   );
 }
 
 // ============================================
-// MAIN SWITCH
+// TERMS AND CONDITIONS CARD (Fix 2)
+// Matches اصل-١.png reference
+// ============================================
+
+function TermsAndConditionsCard({
+  payload,
+  onAction,
+}: {
+  payload: Record<string, unknown>;
+  onAction?: (action: string, payload?: Record<string, unknown>) => void;
+}) {
+  const [agreed, setAgreed] = useState(false);
+  const userName = (payload.userName as string) || 'العميل';
+  const propertyTitle = (payload.propertyTitle as string) || '';
+  const loanAmount = payload.loanAmount as number;
+  const loanTenor = payload.loanTenor as number;
+
+  return (
+    <div className="bg-white rounded-xl border border-border/60 shadow-sm overflow-hidden" dir="rtl">
+      {/* Header */}
+      <div className="p-4 text-center border-b border-border/40 bg-[#F8F5F0]">
+        <div className="flex items-center justify-center gap-2 mb-1">
+          <FileText className="w-5 h-5 text-[#1B4965]" />
+          <h3 className="font-bold text-foreground text-base">عقد تمويل مرابحة عقارية</h3>
+        </div>
+        <p className="text-xs text-muted-foreground">رقم العقد: ASL-2026-XXXXX</p>
+      </div>
+
+      {/* Quick summary */}
+      <div className="grid grid-cols-3 gap-0 border-b border-border/40">
+        <div className="p-3 text-center border-l border-border/40">
+          <p className="text-[10px] text-muted-foreground mb-0.5">مبلغ التمويل</p>
+          <p className="font-bold text-[#1B4965] text-sm">{formatCurrency(loanAmount)} ر.س</p>
+        </div>
+        <div className="p-3 text-center border-l border-border/40">
+          <p className="text-[10px] text-muted-foreground mb-0.5">المدة</p>
+          <p className="font-bold text-foreground text-sm">{loanTenor} سنوات</p>
+        </div>
+        <div className="p-3 text-center">
+          <p className="text-[10px] text-muted-foreground mb-0.5">العقار المرهون</p>
+          <p className="font-bold text-foreground text-xs leading-tight">{propertyTitle}</p>
+        </div>
+      </div>
+
+      {/* Accordion sections */}
+      <AccordionSection title="أطراف العقد" defaultOpen={true}>
+        <p className="mb-1">الطرف الأول (الممول): شركة أصل للتمويل، سجل تجاري رقم XXXXXXXXXX</p>
+        <p>الطرف الثاني (العميل): {userName}، هوية رقم [رقم الهوية]</p>
+      </AccordionSection>
+
+      <AccordionSection title="موضوع العقد">
+        <p>يوافق الطرف الأول على تقديم تمويل للطرف الثاني بموجب عقد مرابحة سلع متوافق مع أحكام الشريعة الإسلامية، مضموناً برهن عقاري على العقار المحدد أدناه.</p>
+      </AccordionSection>
+
+      <AccordionSection title="أحكام الرهن العقاري الإلكتروني">
+        <ol className="space-y-2 list-none">
+          <li><span className="font-semibold text-foreground">١.</span> يقر الطرف الثاني بموافقته على رهن العقار المملوك له لصالح الطرف الأول كضمان للتمويل.</li>
+          <li><span className="font-semibold text-foreground">٢.</span> يتم توثيق الرهن إلكترونياً عبر منصة ناجز التابعة لوزارة العدل.</li>
+          <li><span className="font-semibold text-foreground">٣.</span> يلتزم الطرف الثاني بالتوقيع على صك الرهن إلكترونياً عبر منصة ناجز خلال 48 ساعة من توقيع هذا العقد.</li>
+          <li><span className="font-semibold text-foreground">٤.</span> يبقى الرهن سارياً حتى سداد كامل المبلغ المستحق.</li>
+          <li><span className="font-semibold text-foreground">٥.</span> في حال التخلف عن السداد، يحق للطرف الأول اتخاذ الإجراءات النظامية لتحصيل مستحقاته.</li>
+        </ol>
+      </AccordionSection>
+
+      <AccordionSection title="الهيكلة الشرعية">
+        <p>يتم التمويل وفق آلية التورق/المرابحة المعتمدة من الهيئة الشرعية، حيث يقوم الممول بشراء سلعة (معادن ثمينة) نقداً ثم يبيعها للعميل بثمن مؤجل يتضمن هامش ربح معلوم، ثم يوكل العميل الممول لبيع السلعة نقداً وإيداع المبلغ في حسابه.</p>
+      </AccordionSection>
+
+      <AccordionSection title="شروط السداد">
+        <p>يلتزم الطرف الثاني بسداد الأقساط الشهرية في مواعيدها المحددة. في حال التأخر، تطبق رسوم التأخير المعتمدة من البنك المركزي السعودي.</p>
+      </AccordionSection>
+
+      {/* Important note */}
+      <div className="mx-4 my-3 p-3 bg-[#FFF8F0] border border-[#C4956A]/30 rounded-lg" dir="rtl">
+        <div className="flex items-start gap-2">
+          <AlertCircle className="w-4 h-4 text-[#C4956A] flex-shrink-0 mt-0.5" />
+          <div>
+            <p className="text-xs font-bold text-[#C4956A] mb-1">خطوة مهمة</p>
+            <p className="text-xs text-[#C4956A]/80">بعد الموافقة على العقد، سيُطلب منك اعتماد/توقيع صك الرهن عبر منصة ناجز</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Checkbox agreement */}
+      <div className="px-4 pb-3" dir="rtl">
+        <button
+          onClick={() => setAgreed(!agreed)}
+          className="flex items-start gap-3 w-full text-right"
+        >
+          <div className={`w-5 h-5 rounded border-2 flex-shrink-0 mt-0.5 flex items-center justify-center transition-colors ${
+            agreed ? 'bg-[#1B4965] border-[#1B4965]' : 'border-gray-300 bg-white'
+          }`}>
+            {agreed && <CheckCircle2 className="w-3 h-3 text-white" />}
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-foreground">أقر بأنني قرأت وفهمت جميع بنود العقد</p>
+            <p className="text-xs text-muted-foreground mt-0.5">وأوافق على الشروط والأحكام المذكورة أعلاه</p>
+          </div>
+        </button>
+      </div>
+
+      {/* CTA */}
+      <div className="p-3 border-t border-border/40">
+        <button
+          onClick={() => agreed && onAction?.('accept_disclosures')}
+          disabled={!agreed}
+          className={`w-full py-3 rounded-xl text-sm font-bold transition-all active:scale-[0.97] flex items-center justify-center gap-2 ${
+            agreed
+              ? 'bg-[#1B4965] text-white shadow-md'
+              : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+          }`}
+        >
+          <span>الموافقة والمتابعة</span>
+          <span className="text-lg">←</span>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+
+// ============================================
+// FULL CONTRACT CARD (Fix 3)
+// Formal contract document - matches اصل-١.png
+// ============================================
+
+function FullContractCard({
+  payload,
+  onAction,
+}: {
+  payload: Record<string, unknown>;
+  onAction?: (action: string, payload?: Record<string, unknown>) => void;
+}) {
+  const [agreed, setAgreed] = useState(false);
+  const userName = (payload.userName as string) || 'العميل';
+  const propertyTitle = (payload.propertyTitle as string) || '';
+  const loanAmount = payload.loanAmount as number;
+  const loanTenor = payload.loanTenor as number;
+  const monthlyPayment = payload.monthlyPayment as number;
+
+  return (
+    <div className="bg-white rounded-xl border border-border/60 shadow-sm overflow-hidden" dir="rtl">
+      {/* Header with back arrow */}
+      <div className="p-3 flex items-center justify-between border-b border-border/40">
+        <span className="text-sm font-bold text-foreground">مراجعة العقد</span>
+        <button className="text-muted-foreground">
+          <span className="text-lg">→</span>
+        </button>
+      </div>
+
+      {/* Contract title card */}
+      <div className="m-3 p-4 bg-[#F8F5F0] rounded-xl">
+        <div className="flex items-center gap-3 mb-3">
+          <div className="w-10 h-10 rounded-lg bg-[#1B4965]/10 flex items-center justify-center">
+            <FileText className="w-5 h-5 text-[#1B4965]" />
+          </div>
+          <div>
+            <h3 className="font-bold text-foreground text-base">عقد تمويل مرابحة</h3>
+            <p className="text-xs text-muted-foreground">رقم العقد: ASL-2026-XXXXX</p>
+          </div>
+        </div>
+
+        {/* Quick summary grid */}
+        <div className="bg-white/80 rounded-lg p-3 space-y-2">
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <p className="text-[10px] text-muted-foreground">مبلغ التمويل</p>
+              <p className="font-bold text-[#1B4965] text-sm">{formatCurrency(loanAmount)} ر.س</p>
+            </div>
+            <div>
+              <p className="text-[10px] text-muted-foreground">المدة</p>
+              <p className="font-bold text-foreground text-sm">{loanTenor} سنوات</p>
+            </div>
+          </div>
+          <div className="text-center pt-1 border-t border-border/30">
+            <p className="text-[10px] text-muted-foreground">العقار المرهون</p>
+            <p className="font-bold text-foreground text-sm">{propertyTitle}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Accordion sections */}
+      <AccordionSection title="أطراف العقد">
+        <p className="mb-1">الطرف الأول (الممول): شركة أصل للتمويل، سجل تجاري رقم XXXXXXXXXX</p>
+        <p>الطرف الثاني (العميل): {userName}، هوية رقم [رقم الهوية]</p>
+      </AccordionSection>
+
+      <AccordionSection title="موضوع العقد">
+        <p>يوافق الطرف الأول على تقديم تمويل للطرف الثاني بموجب عقد مرابحة سلع متوافق مع أحكام الشريعة الإسلامية، مضموناً برهن عقاري على العقار المحدد أدناه.</p>
+      </AccordionSection>
+
+      <AccordionSection title="أحكام الرهن العقاري الإلكتروني" highlight={true} defaultOpen={true}>
+        <ol className="space-y-2 list-none">
+          <li><span className="font-semibold text-foreground">١.</span> يقر الطرف الثاني بموافقته على رهن العقار المملوك له لصالح الطرف الأول كضمان للتمويل.</li>
+          <li><span className="font-semibold text-foreground">٢.</span> يتم توثيق الرهن إلكترونياً عبر منصة ناجز التابعة لوزارة العدل.</li>
+          <li><span className="font-semibold text-foreground">٣.</span> يلتزم الطرف الثاني بالتوقيع على صك الرهن إلكترونياً عبر منصة ناجز خلال 48 ساعة من توقيع هذا العقد.</li>
+          <li><span className="font-semibold text-foreground">٤.</span> يبقى الرهن سارياً حتى سداد كامل المبلغ المستحق.</li>
+          <li><span className="font-semibold text-foreground">٥.</span> في حال التخلف عن السداد، يحق للطرف الأول اتخاذ الإجراءات النظامية لتحصيل مستحقاته.</li>
+        </ol>
+      </AccordionSection>
+
+      <AccordionSection title="الهيكلة الشرعية">
+        <p>يتم التمويل وفق آلية التورق/المرابحة المعتمدة من الهيئة الشرعية، حيث يقوم الممول بشراء سلعة (معادن ثمينة) نقداً ثم يبيعها للعميل بثمن مؤجل يتضمن هامش ربح معلوم، ثم يوكل العميل الممول لبيع السلعة نقداً وإيداع المبلغ في حسابه.</p>
+      </AccordionSection>
+
+      <AccordionSection title="شروط السداد">
+        <p>يلتزم الطرف الثاني بسداد الأقساط الشهرية في مواعيدها المحددة. في حال التأخر، تطبق رسوم التأخير المعتمدة من البنك المركزي السعودي.</p>
+      </AccordionSection>
+
+      {/* Important note */}
+      <div className="mx-4 my-3 p-3 bg-[#FFF8F0] border border-[#C4956A]/30 rounded-lg">
+        <div className="flex items-start gap-2">
+          <AlertCircle className="w-4 h-4 text-[#C4956A] flex-shrink-0 mt-0.5" />
+          <div>
+            <p className="text-xs font-bold text-[#C4956A] mb-1">خطوة مهمة</p>
+            <p className="text-xs text-[#C4956A]/80">بعد الموافقة على العقد، سيُطلب منك اعتماد/توقيع صك الرهن عبر منصة ناجز</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Checkbox */}
+      <div className="px-4 pb-3">
+        <button
+          onClick={() => setAgreed(!agreed)}
+          className="flex items-start gap-3 w-full text-right"
+        >
+          <div className={`w-5 h-5 rounded border-2 flex-shrink-0 mt-0.5 flex items-center justify-center transition-colors ${
+            agreed ? 'bg-[#1B4965] border-[#1B4965]' : 'border-gray-300 bg-white'
+          }`}>
+            {agreed && <CheckCircle2 className="w-3 h-3 text-white" />}
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-foreground">أقر بأنني قرأت وفهمت جميع بنود العقد</p>
+            <p className="text-xs text-muted-foreground mt-0.5">وأوافق على الشروط والأحكام المذكورة أعلاه</p>
+          </div>
+        </button>
+      </div>
+
+      {/* CTA */}
+      <div className="p-3 border-t border-border/40">
+        <button
+          onClick={() => agreed && onAction?.('start_najiz')}
+          disabled={!agreed}
+          className={`w-full py-3 rounded-xl text-sm font-bold transition-all active:scale-[0.97] flex items-center justify-center gap-2 ${
+            agreed
+              ? 'bg-[#1B4965] text-white shadow-md'
+              : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+          }`}
+        >
+          <span>الموافقة والمتابعة</span>
+          <span className="text-lg">←</span>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+
+// ============================================
+// NAJIZ SIGNING FLOW CARD (Fix 5)
+// 2-screen dark teal modal matching reference screenshots
+// Screen 1: Steps + "فتح ناجز" button
+// Screen 2: Countdown timer + "تمت الموافقة في ناجز؟ اضغط هنا"
+// ============================================
+
+function NajizSigningFlowCard({
+  onAction,
+}: {
+  payload: Record<string, unknown>;
+  onAction?: (action: string, payload?: Record<string, unknown>) => void;
+}) {
+  const [screen, setScreen] = useState<1 | 2>(1);
+  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes in seconds
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // Start countdown when screen 2 is shown
+  useEffect(() => {
+    if (screen === 2) {
+      timerRef.current = setInterval(() => {
+        setTimeLeft((prev) => {
+          if (prev <= 1) {
+            if (timerRef.current) clearInterval(timerRef.current);
+            // Auto-complete when timer runs out
+            onAction?.('najiz_completed');
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [screen, onAction]);
+
+  const minutes = Math.floor(timeLeft / 60);
+  const seconds = timeLeft % 60;
+  const timeStr = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+  // Circular timer progress
+  const timerSize = 100;
+  const timerStroke = 4;
+  const timerRadius = (timerSize - timerStroke) / 2;
+  const timerCircumference = 2 * Math.PI * timerRadius;
+  const timerProgress = (timeLeft / 300) * timerCircumference;
+
+  const handleOpenNajiz = () => {
+    setScreen(2);
+  };
+
+  const handleNajizApproved = () => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    onAction?.('najiz_completed');
+  };
+
+  const handleCancel = () => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    // Just close / do nothing
+  };
+
+  return (
+    <div className="rounded-xl overflow-hidden shadow-lg" dir="rtl">
+      <AnimatePresence mode="wait">
+        {screen === 1 ? (
+          <motion.div
+            key="screen1"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, x: -50 }}
+            transition={{ duration: 0.3 }}
+            className="bg-gradient-to-b from-[#1B4965] to-[#2D5A7B] p-6"
+          >
+            {/* Najiz logo */}
+            <div className="flex justify-center mb-5">
+              <div className="bg-white/15 backdrop-blur-sm rounded-xl px-6 py-3">
+                <span className="text-white font-bold text-xl">ناجز</span>
+              </div>
+            </div>
+
+            {/* Title */}
+            <h3 className="text-white font-bold text-xl text-center mb-2">
+              توقيع صك الرهن
+            </h3>
+            <p className="text-white/70 text-sm text-center mb-6 leading-relaxed">
+              سيُطلب منك اعتماد/توقيع صك الرهن عبر منصة ناجز لإتمام عملية التمويل
+            </p>
+
+            {/* Steps box */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 mb-6">
+              <p className="text-white/90 font-bold text-sm mb-3">الخطوات:</p>
+              <div className="space-y-3">
+                {[
+                  'اضغط على "فتح ناجز" أدناه',
+                  'سجل الدخول عبر النفاذ الوطني',
+                  'راجع تفاصيل صك الرهن',
+                  'وافق على الصك وأكمل التوقيع',
+                ].map((step, i) => (
+                  <div key={i} className="flex items-center gap-3">
+                    <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
+                      <span className="text-white text-xs font-bold">{i + 1}</span>
+                    </div>
+                    <span className="text-white/80 text-sm">{step}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Open Najiz button */}
+            <button
+              onClick={handleOpenNajiz}
+              className="w-full bg-white text-[#1B4965] font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 active:scale-[0.97] transition-transform mb-2"
+            >
+              <span>فتح ناجز</span>
+              <ExternalLink className="w-4 h-4" />
+            </button>
+            <p className="text-white/50 text-xs text-center mb-3">
+              سيتم فتح منصة ناجز في نافذة جديدة
+            </p>
+
+            {/* Cancel */}
+            <button
+              onClick={handleCancel}
+              className="w-full bg-white/10 text-white/80 font-medium py-3 rounded-xl active:scale-[0.97] transition-transform"
+            >
+              إلغاء
+            </button>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="screen2"
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="bg-gradient-to-b from-[#1B4965] to-[#2D5A7B] p-6"
+          >
+            {/* Circular countdown */}
+            <div className="flex justify-center mb-5">
+              <div className="relative" style={{ width: timerSize, height: timerSize }}>
+                <svg width={timerSize} height={timerSize} className="transform -rotate-90">
+                  <circle
+                    cx={timerSize / 2}
+                    cy={timerSize / 2}
+                    r={timerRadius}
+                    fill="none"
+                    stroke="rgba(255,255,255,0.15)"
+                    strokeWidth={timerStroke}
+                  />
+                  <circle
+                    cx={timerSize / 2}
+                    cy={timerSize / 2}
+                    r={timerRadius}
+                    fill="none"
+                    stroke="white"
+                    strokeWidth={timerStroke}
+                    strokeLinecap="round"
+                    strokeDasharray={timerCircumference}
+                    strokeDashoffset={timerCircumference - timerProgress}
+                    className="transition-all duration-1000 ease-linear"
+                  />
+                </svg>
+              </div>
+            </div>
+
+            {/* Title */}
+            <h3 className="text-white font-bold text-xl text-center mb-2">
+              في انتظار التوقيع
+            </h3>
+            <p className="text-white/70 text-sm text-center mb-6">
+              يرجى إكمال التوقيع في منصة ناجز
+            </p>
+
+            {/* Timer display */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 mb-5 text-center">
+              <p className="text-white/60 text-xs mb-2">الوقت المتبقي</p>
+              <p className="text-white font-bold text-4xl tracking-wider font-mono">
+                {timeStr}
+              </p>
+            </div>
+
+            {/* Status */}
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <Clock className="w-4 h-4 text-white/60" />
+              <span className="text-white/60 text-sm">جاري التحقق من حالة التوقيع...</span>
+            </div>
+
+            {/* Approved link */}
+            <button
+              onClick={handleNajizApproved}
+              className="w-full text-center mb-5"
+            >
+              <span className="text-white/90 text-sm underline underline-offset-4 decoration-white/40">
+                تمت الموافقة في ناجز؟ اضغط هنا
+              </span>
+            </button>
+
+            {/* Cancel */}
+            <button
+              onClick={handleCancel}
+              className="w-full bg-white/10 text-white/80 font-medium py-3 rounded-xl active:scale-[0.97] transition-transform"
+            >
+              إلغاء
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+
+// ============================================
+// SHARIA VISUALIZATION CARD (Fix 4)
+// Corrected Tawarruq/Murabaha steps matching اصل-2.png
+// Dark teal header with logo, 5 steps on vertical timeline
+// ============================================
+
+interface ShariaStep {
+  titleAr: string;
+  subtitleAr: string;
+}
+
+const TAWARRUQ_STEPS: ShariaStep[] = [
+  { titleAr: 'الطلب والإفصاحات الشرعية', subtitleAr: 'تم تقديم الطلب والموافقة على الإفصاحات' },
+  { titleAr: 'شراء السلعة نقداً بواسطة الجهة الممولة', subtitleAr: 'شراء ذهب عبر مزود معتمد' },
+  { titleAr: 'بيع مرابحة للعميل بثمن مؤجل', subtitleAr: 'يتضمن الربح بوضوح' },
+  { titleAr: 'تسييل السلعة نقداً', subtitleAr: 'قد يتم عبر وكالة' },
+  { titleAr: 'صرف السيولة للعميل', subtitleAr: 'إيداع المبلغ في حسابك' },
+];
+
+function ShariaVisualizationCard({
+  payload,
+  onAction,
+}: {
+  payload: Record<string, unknown>;
+  onAction?: (action: string, payload?: Record<string, unknown>) => void;
+}) {
+  const steps = (payload.steps as ShariaStep[]) || TAWARRUQ_STEPS;
+  const [completedSteps, setCompletedSteps] = useState(0);
+  const [allDone, setAllDone] = useState(false);
+
+  useEffect(() => {
+    // Animate steps one by one, 1 second apart
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    steps.forEach((_, index) => {
+      const timer = setTimeout(() => {
+        setCompletedSteps(index + 1);
+        if (index === steps.length - 1) {
+          // All steps done, show success after a short delay
+          const doneTimer = setTimeout(() => setAllDone(true), 800);
+          timers.push(doneTimer);
+        }
+      }, (index + 1) * 1000);
+      timers.push(timer);
+    });
+
+    return () => timers.forEach(clearTimeout);
+  }, [steps]);
+
+  return (
+    <div className="rounded-xl overflow-hidden shadow-lg" dir="rtl">
+      {/* Dark teal header with logo */}
+      <div className="bg-gradient-to-b from-[#1B4965] to-[#2D5A7B] p-5 text-center">
+        {/* Logo placeholder */}
+        <div className="w-14 h-14 mx-auto mb-3 rounded-xl bg-white/15 backdrop-blur-sm flex items-center justify-center">
+          <Scale className="w-7 h-7 text-white" />
+        </div>
+        <h3 className="text-white font-bold text-lg mb-1">
+          تنفيذ التمويل المتوافق مع الشريعة
+        </h3>
+        <p className="text-white/60 text-sm">
+          آلية التورق/المرابحة المعتمدة
+        </p>
+      </div>
+
+      {/* Steps timeline */}
+      <div className="bg-white p-5">
+        <div className="space-y-0">
+          {steps.map((step, index) => {
+            const isCompleted = index < completedSteps;
+            const isActive = index === completedSteps;
+            const isLast = index === steps.length - 1;
+
+            return (
+              <div key={index} className="flex gap-3">
+                {/* Timeline column */}
+                <div className="flex flex-col items-center">
+                  {/* Circle */}
+                  <motion.div
+                    initial={{ scale: 0.5, opacity: 0 }}
+                    animate={
+                      isCompleted
+                        ? { scale: 1, opacity: 1 }
+                        : isActive
+                        ? { scale: 1, opacity: 0.5 }
+                        : { scale: 0.8, opacity: 0.3 }
+                    }
+                    transition={{ duration: 0.4, delay: index * 0.1 }}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 border-2 ${
+                      isCompleted
+                        ? 'bg-green-50 border-green-500'
+                        : 'bg-gray-50 border-gray-200'
+                    }`}
+                  >
+                    {isCompleted ? (
+                      <CheckCircle2 className="w-5 h-5 text-green-500" />
+                    ) : (
+                      <div className="w-2 h-2 rounded-full bg-gray-300" />
+                    )}
+                  </motion.div>
+                  {/* Connecting line */}
+                  {!isLast && (
+                    <div className={`w-0.5 h-8 my-1 transition-colors duration-500 ${
+                      isCompleted ? 'bg-green-400' : 'bg-gray-200'
+                    }`} />
+                  )}
+                </div>
+
+                {/* Content */}
+                <motion.div
+                  initial={{ opacity: 0, x: 10 }}
+                  animate={isCompleted ? { opacity: 1, x: 0 } : { opacity: 0.4, x: 0 }}
+                  transition={{ duration: 0.4, delay: index * 0.15 }}
+                  className="flex-1 pb-4"
+                >
+                  <p className={`font-bold text-sm ${isCompleted ? 'text-foreground' : 'text-muted-foreground'}`}>
+                    {step.titleAr}
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    {step.subtitleAr}
+                  </p>
+                  {isCompleted && (
+                    <motion.p
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="text-xs text-green-600 font-medium mt-1 flex items-center gap-1"
+                    >
+                      <CheckCircle2 className="w-3 h-3" />
+                      تم
+                    </motion.p>
+                  )}
+                </motion.div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Success banner */}
+      <AnimatePresence>
+        {allDone && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            transition={{ duration: 0.4 }}
+          >
+            <div className="mx-4 mb-3 p-3 bg-green-50 border border-green-200 rounded-xl flex items-center justify-center gap-2">
+              <CheckCircle2 className="w-5 h-5 text-green-600" />
+              <div className="text-center">
+                <p className="text-sm font-bold text-green-700">تم تنفيذ التمويل بنجاح</p>
+                <p className="text-xs text-green-600">جاهز لصرف السيولة</p>
+              </div>
+            </div>
+
+            <div className="p-3">
+              <button
+                onClick={() => onAction?.('confirm_disbursement')}
+                className="w-full bg-[#1B4965] text-white font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 active:scale-[0.97] transition-transform shadow-md"
+              >
+                <span>متابعة لصرف السيولة</span>
+                <span className="text-lg">←</span>
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+
+// ============================================
+// MAIN INTERACTIVE CARD COMPONENT
 // ============================================
 
 export default function InteractiveCard({ card, onAction }: InteractiveCardProps) {
-  const { type, payload } = card;
-
-  switch (type) {
+  switch (card.type) {
     case 'property_list':
-      return <PropertyListCard payload={payload} onAction={onAction} />;
+      return <PropertyListCard payload={card.payload} onAction={onAction} />;
+
     case 'loan_summary':
-      return <LoanSummaryCard payload={payload} />;
+      return <LoanSummaryCard payload={card.payload} />;
+
     case 'decision':
-      return <DecisionCard payload={payload} />;
+      return <DecisionCard payload={card.payload} />;
+
     case 'contract':
-      return <ContractCard payload={payload} onAction={onAction} />;
+      return <ContractCard payload={card.payload} onAction={onAction} />;
+
     case 'action_najiz':
       return (
         <ActionCard
-          payload={payload}
+          payload={card.payload}
           onAction={onAction}
           icon={Landmark}
-          title="التوقيع الإلكتروني عبر ناجز"
-          description="توثيق العقد عبر منصة ناجز"
-          buttonText="بدء التوقيع الإلكتروني"
+          title="توقيع صك الرهن — ناجز"
+          description="توقيع إلكتروني عبر منصة ناجز"
+          buttonText="توقيع إلكتروني عبر ناجز"
           actionName="start_najiz"
-          completed={payload.completed as boolean}
+          completed={card.payload.completed as boolean}
         />
       );
+
     case 'action_sharia':
       return (
         <ActionCard
-          payload={payload}
+          payload={card.payload}
           onAction={onAction}
           icon={Scale}
-          title="التنفيذ الشرعي"
-          description="تنفيذ عملية المرابحة الشرعية"
-          buttonText="بدء التنفيذ الشرعي"
+          title="تنفيذ العقد الشرعي"
+          description="تنفيذ التورق/المرابحة المعتمدة"
+          buttonText="تنفيذ العقد الشرعي"
           actionName="start_sharia"
-          completed={payload.completed as boolean}
+          completed={card.payload.completed as boolean}
         />
       );
+
     case 'sharia_visualization':
-      return <ShariaVisualizationCard payload={payload} />;
+      return <ShariaVisualizationCard payload={card.payload} onAction={onAction} />;
+
     case 'disbursement':
-      return <DisbursementCard payload={payload} />;
+      return <DisbursementCard payload={card.payload} />;
+
     case 'payment_schedule':
-      return <PaymentScheduleCard payload={payload} />;
+      return <PaymentScheduleCard payload={card.payload} />;
+
+    // Fix 2: T&C modal
+    case 'terms_and_conditions':
+      return <TermsAndConditionsCard payload={card.payload} onAction={onAction} />;
+
+    // Fix 3: Full contract modal
+    case 'full_contract':
+      return <FullContractCard payload={card.payload} onAction={onAction} />;
+
+    // Fix 5: Najiz signing flow
+    case 'najiz_signing_flow':
+      return <NajizSigningFlowCard payload={card.payload} onAction={onAction} />;
+
     // Revaluation cards
     case 'reval_current_value':
-      return <RevalCurrentValueCard payload={payload} />;
+      return <RevalCurrentValueCard payload={card.payload} />;
+
     case 'reval_timeslot_picker':
-      return <RevalTimeSlotPickerCard payload={payload} onAction={onAction} />;
+      return <RevalTimeSlotPickerCard payload={card.payload} onAction={onAction} />;
+
     case 'reval_booking_summary':
-      return <RevalBookingSummaryCard payload={payload} />;
+      return <RevalBookingSummaryCard payload={card.payload} />;
+
     case 'reval_booking_success':
-      return <RevalBookingSuccessCard payload={payload} />;
+      return <RevalBookingSuccessCard payload={card.payload} />;
+
     // Nav tab cards
     case 'properties_list':
-      return <PropertiesListCard payload={payload} />;
+      return <PropertiesListCard payload={card.payload} />;
+
     case 'loans_list':
-      return <LoansListCard payload={payload} />;
+      return <LoansListCard payload={card.payload} />;
+
     case 'credit_summary':
-      return <CreditSummaryCard payload={payload} />;
+      return <CreditSummaryCard payload={card.payload} />;
+
     default:
       return null;
   }

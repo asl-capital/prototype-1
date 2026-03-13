@@ -32,6 +32,11 @@ export type CardType =
   | 'sharia_visualization'
   | 'disbursement'
   | 'payment_schedule'
+  // T&C and full contract modals
+  | 'terms_and_conditions'
+  | 'full_contract'
+  // Najiz signing flow
+  | 'najiz_signing_flow'
   // Revaluation card types
   | 'reval_current_value'
   | 'reval_timeslot_picker'
