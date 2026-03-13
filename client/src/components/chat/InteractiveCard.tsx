@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Building2, CheckCircle2, FileText, Scale, Landmark,
   PartyPopper, Calendar, Shield, TrendingUp, Clock,
@@ -733,6 +733,202 @@ function CreditSummaryCard({ payload }: { payload: Record<string, unknown> }) {
 }
 
 // ============================================
+// SHARIA VISUALIZATION CARD (Murabaha / Tawarruq)
+// ============================================
+
+interface ShariaStep {
+  label: string;
+  detail?: string;
+}
+
+function ShariaVisualizationCard({ payload }: { payload: Record<string, unknown> }) {
+  const contractType = (payload.contractType as string) || 'murabaha';
+  const [completedSteps, setCompletedSteps] = useState(0);
+  const [animationDone, setAnimationDone] = useState(false);
+
+  const murabahaSteps: ShariaStep[] = [
+    { label: 'البنك يشتري العقار من البائع', detail: 'Bank purchases property from seller' },
+    { label: 'تحديد هامش الربح', detail: 'Profit margin determined: 7.5%' },
+    { label: 'بيع العقار للعميل بالتقسيط', detail: 'Property sold to client in installments' },
+    { label: 'توقيع عقد المرابحة', detail: 'Murabaha contract signed' },
+    { label: 'اكتمل العقد', detail: 'Contract completed' },
+  ];
+
+  const tawarruqSteps: ShariaStep[] = [
+    { label: 'البنك يشتري سلعة من السوق', detail: 'Bank purchases commodity' },
+    { label: 'بيع السلعة للعميل بالأجل', detail: 'Commodity sold to client on credit' },
+    { label: 'العميل يبيع السلعة نقداً', detail: 'Client sells commodity for cash' },
+    { label: 'العميل يحصل على التمويل النقدي', detail: 'Client receives cash financing' },
+    { label: 'اكتمل التورق', detail: 'Tawarruq completed' },
+  ];
+
+  const steps = contractType === 'tawarruq' ? tawarruqSteps : murabahaSteps;
+  const title = contractType === 'tawarruq' ? 'تنفيذ عقد التورق' : 'تنفيذ عقد المرابحة';
+  const subtitle = contractType === 'tawarruq' ? 'Tawarruq Execution' : 'Murabaha Execution';
+
+  useEffect(() => {
+    if (completedSteps >= steps.length) {
+      setAnimationDone(true);
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setCompletedSteps((prev) => prev + 1);
+    }, 1200);
+
+    return () => clearTimeout(timer);
+  }, [completedSteps, steps.length]);
+
+  return (
+    <div className="bg-white rounded-xl border border-border/60 shadow-sm overflow-hidden" dir="rtl">
+      {/* Header */}
+      <div className={`p-4 text-center ${
+        animationDone
+          ? 'bg-gradient-to-l from-green-500 to-emerald-600'
+          : 'bg-gradient-to-l from-[#1B4965] to-[#2D5A7B]'
+      } transition-all duration-700`}>
+        <div className="flex items-center justify-center gap-2 mb-1">
+          {animationDone ? (
+            <CheckCircle2 className="w-6 h-6 text-white" />
+          ) : (
+            <Scale className="w-6 h-6 text-white" />
+          )}
+          <h3 className="text-white font-bold text-base">{title}</h3>
+        </div>
+        <p className="text-white/70 text-xs">{subtitle}</p>
+      </div>
+
+      {/* Steps */}
+      <div className="p-4">
+        <div className="relative">
+          {/* Vertical line */}
+          <div className="absolute right-[15px] top-2 bottom-2 w-0.5 bg-gray-200" />
+          {/* Completed portion of line */}
+          <motion.div
+            className="absolute right-[15px] top-2 w-0.5 bg-[#1B4965] z-10"
+            initial={{ height: 0 }}
+            animate={{ height: `${Math.min(100, (completedSteps / (steps.length - 1)) * 100)}%` }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
+          />
+
+          <div className="space-y-4">
+            <AnimatePresence>
+              {steps.map((step, index) => {
+                const isCompleted = index < completedSteps;
+                const isActive = index === completedSteps - 1 && !animationDone;
+                const isPending = index >= completedSteps;
+                const isLast = index === steps.length - 1;
+
+                return (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0.4, x: 10 }}
+                    animate={{
+                      opacity: isCompleted || isActive ? 1 : 0.4,
+                      x: 0,
+                    }}
+                    transition={{ duration: 0.5, delay: 0.1 }}
+                    className="flex items-start gap-3 relative"
+                  >
+                    {/* Step indicator */}
+                    <div className="flex-shrink-0 z-20">
+                      {isCompleted ? (
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                          className={`w-[30px] h-[30px] rounded-full flex items-center justify-center ${
+                            isLast && animationDone
+                              ? 'bg-green-500'
+                              : 'bg-[#1B4965]'
+                          }`}
+                        >
+                          <CheckCircle2 className="w-4 h-4 text-white" />
+                        </motion.div>
+                      ) : isPending ? (
+                        <div className="w-[30px] h-[30px] rounded-full border-2 border-gray-300 bg-white flex items-center justify-center">
+                          <span className="text-xs text-gray-400 font-bold">{index + 1}</span>
+                        </div>
+                      ) : (
+                        <motion.div
+                          animate={{ scale: [1, 1.15, 1] }}
+                          transition={{ repeat: Infinity, duration: 1.5 }}
+                          className="w-[30px] h-[30px] rounded-full bg-[#1B4965]/20 border-2 border-[#1B4965] flex items-center justify-center"
+                        >
+                          <div className="w-2.5 h-2.5 rounded-full bg-[#1B4965]" />
+                        </motion.div>
+                      )}
+                    </div>
+
+                    {/* Step content */}
+                    <div className="flex-1 pt-1">
+                      <p className={`text-sm font-semibold ${
+                        isCompleted
+                          ? isLast && animationDone
+                            ? 'text-green-600'
+                            : 'text-foreground'
+                          : 'text-gray-400'
+                      }`}>
+                        {step.label}
+                        {isLast && isCompleted && ' ✓'}
+                      </p>
+                      {step.detail && (
+                        <p className={`text-[11px] mt-0.5 ${
+                          isCompleted ? 'text-muted-foreground' : 'text-gray-300'
+                        }`}>
+                          {step.detail}
+                        </p>
+                      )}
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </AnimatePresence>
+          </div>
+        </div>
+
+        {/* Success state */}
+        {animationDone && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="mt-4 p-3 bg-green-50 rounded-lg border border-green-200 text-center"
+          >
+            <div className="flex items-center justify-center gap-2 text-green-600">
+              <Shield className="w-4 h-4" />
+              <span className="text-sm font-bold">
+                {contractType === 'tawarruq'
+                  ? 'تم تنفيذ عقد التورق بنجاح ✓'
+                  : 'تم تنفيذ العقد الشرعي بنجاح ✓'}
+              </span>
+            </div>
+            <p className="text-xs text-green-600/70 mt-1">متوافق مع أحكام الشريعة الإسلامية</p>
+          </motion.div>
+        )}
+      </div>
+
+      {/* Progress bar */}
+      {!animationDone && (
+        <div className="px-4 pb-4">
+          <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
+            <motion.div
+              className="h-full bg-[#1B4965] rounded-full"
+              initial={{ width: '0%' }}
+              animate={{ width: `${(completedSteps / steps.length) * 100}%` }}
+              transition={{ duration: 0.5 }}
+            />
+          </div>
+          <p className="text-[10px] text-muted-foreground text-center mt-1">
+            جاري التنفيذ... {completedSteps}/{steps.length}
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ============================================
 // MAIN SWITCH
 // ============================================
 
@@ -774,6 +970,8 @@ export default function InteractiveCard({ card, onAction }: InteractiveCardProps
           completed={payload.completed as boolean}
         />
       );
+    case 'sharia_visualization':
+      return <ShariaVisualizationCard payload={payload} />;
     case 'disbursement':
       return <DisbursementCard payload={payload} />;
     case 'payment_schedule':

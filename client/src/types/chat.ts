@@ -29,6 +29,7 @@ export type CardType =
   | 'contract'
   | 'action_najiz'
   | 'action_sharia'
+  | 'sharia_visualization'
   | 'disbursement'
   | 'payment_schedule'
   // Revaluation card types
