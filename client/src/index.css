@@ -1,0 +1,493 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* Desert Minimalism Design System for Asl (أصل)
+ * Color Philosophy: Warm earth tones with oasis blue
+ * Typography: IBM Plex Sans Arabic
+ * Layout: RTL-first, generous spacing, floating cards
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  
+  /* Custom Desert Minimalism Colors */
+  --color-oasis: oklch(0.35 0.08 230);
+  --color-oasis-light: oklch(0.45 0.08 230);
+  --color-sand: oklch(0.91 0.03 80);
+  --color-sand-dark: oklch(0.85 0.04 75);
+  --color-terracotta: oklch(0.65 0.12 55);
+  --color-gold: oklch(0.75 0.14 85);
+  --color-warm-white: oklch(0.98 0.01 90);
+  --color-charcoal: oklch(0.25 0.02 60);
+  
+  /* Status colors */
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  
+  /* Font family */
+  --font-sans: 'IBM Plex Sans Arabic', system-ui, sans-serif;
+}
+
+:root {
+  /* Primary: Deep Oasis Blue - Trust, depth, stability */
+  --primary: oklch(0.35 0.08 230);
+  --primary-foreground: oklch(0.98 0.01 90);
+  
+  /* Secondary: Desert Sand - Warmth, authenticity */
+  --secondary: oklch(0.91 0.03 80);
+  --secondary-foreground: oklch(0.25 0.02 60);
+  
+  /* Accent: Terracotta Gold - Premium, heritage */
+  --accent: oklch(0.65 0.12 55);
+  --accent-foreground: oklch(0.98 0.01 90);
+  
+  /* Background: Warm White - Clean but not sterile */
+  --background: oklch(0.98 0.01 90);
+  --foreground: oklch(0.25 0.02 60);
+  
+  /* Card styling */
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.25 0.02 60);
+  
+  /* Popover */
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.25 0.02 60);
+  
+  /* Muted */
+  --muted: oklch(0.95 0.02 80);
+  --muted-foreground: oklch(0.45 0.03 60);
+  
+  /* Destructive */
+  --destructive: oklch(0.55 0.2 25);
+  --destructive-foreground: oklch(0.98 0.01 90);
+  
+  /* Border & Input */
+  --border: oklch(0.88 0.02 80);
+  --input: oklch(0.92 0.02 80);
+  --ring: oklch(0.35 0.08 230);
+  
+  /* Charts - Warm gradient */
+  --chart-1: oklch(0.35 0.08 230);
+  --chart-2: oklch(0.65 0.12 55);
+  --chart-3: oklch(0.75 0.14 85);
+  --chart-4: oklch(0.85 0.04 75);
+  --chart-5: oklch(0.45 0.08 230);
+  
+  /* Sidebar */
+  --sidebar: oklch(0.98 0.01 90);
+  --sidebar-foreground: oklch(0.25 0.02 60);
+  --sidebar-primary: oklch(0.35 0.08 230);
+  --sidebar-primary-foreground: oklch(0.98 0.01 90);
+  --sidebar-accent: oklch(0.91 0.03 80);
+  --sidebar-accent-foreground: oklch(0.25 0.02 60);
+  --sidebar-border: oklch(0.88 0.02 80);
+  --sidebar-ring: oklch(0.35 0.08 230);
+  
+  /* Radius */
+  --radius: 0.75rem;
+  
+  /* Success/Warning/Info states */
+  --success: oklch(0.55 0.15 145);
+  --success-foreground: oklch(0.98 0.01 90);
+  --warning: oklch(0.75 0.14 85);
+  --warning-foreground: oklch(0.25 0.02 60);
+  --info: oklch(0.45 0.08 230);
+  --info-foreground: oklch(0.98 0.01 90);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  
+  html {
+    font-family: 'IBM Plex Sans Arabic', system-ui, sans-serif;
+    direction: rtl;
+  }
+  
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "ss01", "ss02";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  [type="button"]:not(:disabled),
+  [type="submit"]:not(:disabled),
+  [type="reset"]:not(:disabled),
+  a[href],
+  select:not(:disabled),
+  input[type="checkbox"]:not(:disabled),
+  input[type="radio"]:not(:disabled) {
+    @apply cursor-pointer;
+  }
+  
+  /* Arabic Typography Scale */
+  h1 {
+    @apply text-3xl font-bold leading-tight tracking-tight;
+  }
+  
+  h2 {
+    @apply text-2xl font-semibold leading-snug;
+  }
+  
+  h3 {
+    @apply text-xl font-semibold leading-snug;
+  }
+  
+  h4 {
+    @apply text-lg font-medium;
+  }
+  
+  p {
+    @apply text-base leading-relaxed;
+  }
+  
+  /* RTL-specific adjustments */
+  [dir="rtl"] input[type="tel"],
+  [dir="rtl"] input[type="number"] {
+    direction: ltr;
+    text-align: right;
+  }
+}
+
+@layer components {
+  /* Mobile-first container */
+  .container {
+    width: 100%;
+    max-width: 430px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+  
+  .flex {
+    min-height: 0;
+    min-width: 0;
+  }
+  
+  /* Mobile app shell */
+  .app-shell {
+    @apply min-h-screen bg-background flex flex-col;
+    max-width: 430px;
+    margin: 0 auto;
+    position: relative;
+    overflow-x: hidden;
+  }
+  
+  /* Premium card style */
+  .card-premium {
+    @apply bg-card rounded-xl p-5;
+    box-shadow: 0 4px 20px -4px rgba(27, 73, 101, 0.08),
+                0 2px 8px -2px rgba(27, 73, 101, 0.04);
+  }
+  
+  /* Floating card with more depth */
+  .card-floating {
+    @apply bg-card rounded-2xl p-6;
+    box-shadow: 0 8px 32px -8px rgba(27, 73, 101, 0.12),
+                0 4px 16px -4px rgba(27, 73, 101, 0.06);
+  }
+  
+  /* Primary button - Oasis Blue */
+  .btn-primary {
+    @apply bg-primary text-primary-foreground font-medium py-4 px-6 rounded-xl;
+    @apply transition-all duration-200 ease-out;
+    @apply hover:opacity-90 active:scale-[0.98];
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  
+  /* Secondary button - Sand */
+  .btn-secondary {
+    @apply bg-secondary text-secondary-foreground font-medium py-4 px-6 rounded-xl;
+    @apply transition-all duration-200 ease-out;
+    @apply hover:bg-sand-dark active:scale-[0.98];
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  
+  /* Ghost button */
+  .btn-ghost {
+    @apply bg-transparent text-primary font-medium py-4 px-6 rounded-xl;
+    @apply transition-all duration-200 ease-out;
+    @apply hover:bg-primary/5 active:scale-[0.98];
+  }
+  
+  /* Input field styling */
+  .input-field {
+    @apply w-full bg-white border border-border rounded-xl px-4 py-4;
+    @apply text-foreground placeholder:text-muted-foreground;
+    @apply focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary;
+    @apply transition-all duration-200;
+  }
+  
+  /* OTP input styling */
+  .otp-input {
+    @apply w-12 h-14 text-center text-xl font-semibold;
+    @apply bg-white border-2 border-border rounded-xl;
+    @apply focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary;
+    @apply transition-all duration-200;
+  }
+  
+  /* Status badges */
+  .badge-success {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+    background-color: oklch(0.55 0.15 145 / 0.1);
+    color: oklch(0.45 0.12 145);
+  }
+  
+  .badge-warning {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+    background-color: oklch(0.75 0.14 85 / 0.2);
+    color: oklch(0.55 0.12 85);
+  }
+  
+  .badge-info {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+    background-color: oklch(0.45 0.08 230 / 0.1);
+    color: oklch(0.35 0.08 230);
+  }
+  
+  .badge-error {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+    @apply bg-destructive/10 text-destructive;
+  }
+  
+  /* Progress stepper */
+  .stepper-item {
+    @apply flex items-center gap-3;
+  }
+  
+  .stepper-circle {
+    @apply w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium;
+    @apply transition-all duration-300;
+  }
+  
+  .stepper-circle-active {
+    @apply bg-primary text-primary-foreground;
+  }
+  
+  .stepper-circle-complete {
+    background-color: oklch(0.55 0.15 145);
+    color: oklch(0.98 0.01 90);
+  }
+  
+  .stepper-circle-pending {
+    @apply bg-muted text-muted-foreground;
+  }
+  
+  /* Bottom navigation */
+  .bottom-nav {
+    @apply fixed bottom-0 left-0 right-0 bg-white border-t border-border;
+    @apply flex items-center justify-around py-2 px-4;
+    max-width: 430px;
+    margin: 0 auto;
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+  }
+  
+  .bottom-nav-item {
+    @apply flex flex-col items-center gap-1 py-2 px-3;
+    @apply text-muted-foreground transition-colors duration-200;
+  }
+  
+  .bottom-nav-item-active {
+    @apply text-primary;
+  }
+  
+  /* Skeleton loader */
+  .skeleton {
+    @apply animate-pulse bg-muted rounded;
+  }
+  
+  /* Geometric pattern overlay */
+  .pattern-overlay {
+    background-image: url('/images/geometric-pattern.png');
+    background-size: 200px;
+    opacity: 0.05;
+    pointer-events: none;
+  }
+  
+  /* SAR currency formatting */
+  .currency-sar {
+    @apply font-semibold tabular-nums;
+    direction: ltr;
+    unicode-bidi: embed;
+  }
+  
+  /* Slider track */
+  .slider-track {
+    @apply h-2 bg-muted rounded-full;
+  }
+  
+  .slider-fill {
+    @apply h-2 bg-primary rounded-full;
+  }
+  
+  .slider-thumb {
+    @apply w-6 h-6 bg-white border-2 border-primary rounded-full;
+    @apply shadow-md cursor-pointer;
+  }
+}
+
+/* Animations */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes checkmark {
+  0% {
+    stroke-dashoffset: 100;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease-out forwards;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.25s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s ease-out forwards;
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--muted) 25%,
+    var(--background) 50%,
+    var(--muted) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Stagger children animations */
+.stagger-children > * {
+  opacity: 0;
+  animation: slideUp 0.3s ease-out forwards;
+}
+
+.stagger-children > *:nth-child(1) { animation-delay: 0.05s; }
+.stagger-children > *:nth-child(2) { animation-delay: 0.1s; }
+.stagger-children > *:nth-child(3) { animation-delay: 0.15s; }
+.stagger-children > *:nth-child(4) { animation-delay: 0.2s; }
+.stagger-children > *:nth-child(5) { animation-delay: 0.25s; }
+.stagger-children > *:nth-child(6) { animation-delay: 0.3s; }
+
+/* Safe area padding for mobile */
+.safe-area-top {
+  padding-top: max(1rem, env(safe-area-inset-top));
+}
+
+.safe-area-bottom {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}
+
+/* Hide scrollbar but keep functionality */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
