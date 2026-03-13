@@ -59,7 +59,7 @@ export default function ChatInput({ onSend, disabled = false, placeholder }: Cha
             placeholder={placeholder || 'اكتب رسالتك...'}
             rows={1}
             dir="auto"
-            className="w-full resize-none rounded-2xl border border-border/60 bg-[#F8F5F0] px-4 py-2.5 text-[15px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#1B4965]/20 focus:border-[#1B4965] transition-all disabled:opacity-50"
+            className="w-full resize-none rounded-2xl border border-border/60 bg-[#F8F5F0] px-4 py-2.5 text-[15px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#D4A64A]/20 focus:border-[#D4A64A] transition-all disabled:opacity-50"
             style={{ maxHeight: '120px' }}
           />
         </div>
@@ -69,7 +69,7 @@ export default function ChatInput({ onSend, disabled = false, placeholder }: Cha
           whileTap={{ scale: 0.9 }}
           onClick={handleSend}
           disabled={!text.trim() || disabled}
-          className="flex-shrink-0 w-10 h-10 rounded-full bg-[#1B4965] flex items-center justify-center text-white disabled:opacity-40 transition-opacity"
+          className="flex-shrink-0 w-10 h-10 rounded-full bg-[#D4A64A] flex items-center justify-center text-white disabled:opacity-40 transition-opacity"
           aria-label="Send"
         >
           <Send className="w-5 h-5 -rotate-45" style={{ transform: 'scaleX(-1) rotate(-45deg)' }} />

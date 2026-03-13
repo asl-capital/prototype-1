@@ -67,8 +67,8 @@ function SettingsSheet({ open, onClose }: { open: boolean; onClose: () => void }
                   key={i}
                   className="w-full flex items-center gap-3 py-4 border-b border-border/30 last:border-0"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-[#1B4965]/10 flex items-center justify-center flex-shrink-0">
-                    <item.icon className="w-5 h-5 text-[#1B4965]" />
+                  <div className="w-10 h-10 rounded-xl bg-[#D4A64A]/10 flex items-center justify-center flex-shrink-0">
+                    <item.icon className="w-5 h-5 text-[#D4A64A]" />
                   </div>
                   <div className="flex-1 text-right">
                     <p className="font-semibold text-foreground text-sm">{item.label}</p>

@@ -59,7 +59,7 @@ export default function NajizESign() {
   
   return (
     <AppLayout showNav={false}>
-      <div className="min-h-screen bg-gradient-to-b from-[#1B4965] to-[#2D5A7B] relative overflow-hidden">
+      <div className="min-h-screen bg-gradient-to-b from-[#D4A64A] to-[#B6831F] relative overflow-hidden">
         {/* Geometric pattern overlay */}
         <div 
           className="absolute inset-0 opacity-5"
@@ -118,7 +118,7 @@ export default function NajizESign() {
                 {/* CTA */}
                 <button
                   onClick={handleOpenNajiz}
-                  className="w-full bg-white text-[#1B4965] font-semibold py-4 px-6 rounded-xl flex items-center justify-center gap-2"
+                  className="w-full bg-white text-[#D4A64A] font-semibold py-4 px-6 rounded-xl flex items-center justify-center gap-2"
                 >
                   <span>فتح ناجز</span>
                   <ExternalLink className="w-5 h-5" />
@@ -263,7 +263,7 @@ export default function NajizESign() {
                 
                 <button
                   onClick={handleRetry}
-                  className="w-full bg-white text-[#1B4965] font-semibold py-4 px-6 rounded-xl flex items-center justify-center gap-2"
+                  className="w-full bg-white text-[#D4A64A] font-semibold py-4 px-6 rounded-xl flex items-center justify-center gap-2"
                 >
                   <RefreshCw className="w-5 h-5" />
                   <span>إعادة المحاولة</span>

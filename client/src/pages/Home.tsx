@@ -39,7 +39,7 @@ export default function Home() {
       icon: Building2,
       label: 'عقاراتي',
       description: `${properties.length} عقارات مسجلة`,
-      color: 'bg-[#1B4965]',
+      color: 'bg-[#D4A64A]',
       action: () => navigate('/properties')
     },
     {

@@ -83,7 +83,7 @@ export default function NafathConfirmation() {
               className="text-center w-full"
             >
               {/* Nafath logo placeholder */}
-              <div className="w-20 h-20 rounded-2xl bg-[#1B4965] flex items-center justify-center mx-auto mb-6">
+              <div className="w-20 h-20 rounded-2xl bg-[#D4A64A] flex items-center justify-center mx-auto mb-6">
                 <span className="text-white text-2xl font-bold">نفاذ</span>
               </div>
               

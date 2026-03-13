@@ -49,8 +49,8 @@ function PropertyListCard({
             whileTap={{ scale: 0.98 }}
             className="bg-white rounded-xl border border-border/60 shadow-sm overflow-hidden"
           >
-            <div className="h-28 bg-gradient-to-bl from-[#1B4965]/10 to-[#C4956A]/10 flex items-center justify-center relative">
-              <Building2 className="w-10 h-10 text-[#1B4965]/30" />
+            <div className="h-28 bg-gradient-to-bl from-[#D4A64A]/10 to-[#B6831F]/10 flex items-center justify-center relative">
+              <Building2 className="w-10 h-10 text-[#D4A64A]/30" />
               {property.qualificationStatus === 'qualified_24h' && (
                 <span className="absolute top-2 left-2 bg-green-500 text-white text-[10px] px-2 py-0.5 rounded-full font-medium">
                   مؤهل ٢٤ ساعة
@@ -74,13 +74,13 @@ function PropertyListCard({
                 </div>
                 <div>
                   <span className="text-muted-foreground">مؤهل حتى: </span>
-                  <span className="font-semibold text-[#1B4965]">{formatCurrency(property.eligibleAmount)} ر.س</span>
+                  <span className="font-semibold text-[#D4A64A]">{formatCurrency(property.eligibleAmount)} ر.س</span>
                 </div>
               </div>
 
               <button
                 onClick={() => onAction?.('select_property', { propertyId: property.id })}
-                className="w-full bg-[#1B4965] text-white text-sm font-medium py-2.5 rounded-lg active:scale-[0.98] transition-transform"
+                className="w-full bg-[#D4A64A] text-white text-sm font-medium py-2.5 rounded-lg active:scale-[0.98] transition-transform"
               >
                 اختر هذا العقار
               </button>
@@ -105,7 +105,7 @@ function LoanSummaryCard({ payload }: { payload: Record<string, unknown> }) {
 
   return (
     <div className="bg-white rounded-xl border border-border/60 shadow-sm overflow-hidden" dir="rtl">
-      <div className="bg-gradient-to-l from-[#1B4965] to-[#2D5A7B] p-4">
+      <div className="bg-gradient-to-l from-[#2A2A2A] to-[#3D3D3D] p-4">
         <div className="flex items-center gap-2 mb-2">
           <FileText className="w-4 h-4 text-white/80" />
           <span className="text-white/80 text-xs">ملخص التمويل</span>
@@ -131,7 +131,7 @@ function LoanSummaryCard({ payload }: { payload: Record<string, unknown> }) {
         </div>
         <div className="border-t border-border pt-3 flex justify-between items-center">
           <span className="text-muted-foreground text-sm">إجمالي المبلغ المستحق</span>
-          <span className="font-bold text-[#1B4965] text-lg">{formatCurrency(totalPayment)} ر.س</span>
+          <span className="font-bold text-[#D4A64A] text-lg">{formatCurrency(totalPayment)} ر.س</span>
         </div>
       </div>
     </div>
@@ -179,7 +179,7 @@ function DecisionCard({ payload }: { payload: Record<string, unknown> }) {
         </div>
         <div className="flex justify-between">
           <span className="text-muted-foreground text-sm">القسط الشهري</span>
-          <span className="font-bold text-[#1B4965]">{formatCurrency(monthlyPayment)} ر.س</span>
+          <span className="font-bold text-[#D4A64A]">{formatCurrency(monthlyPayment)} ر.س</span>
         </div>
       </div>
     </div>
@@ -201,8 +201,8 @@ function ContractCard({
     <div className="bg-white rounded-xl border border-border/60 shadow-sm overflow-hidden" dir="rtl">
       <div className="p-4 bg-[#F8F5F0]">
         <div className="flex items-center gap-3 mb-3">
-          <div className="w-10 h-10 rounded-lg bg-[#1B4965]/10 flex items-center justify-center">
-            <FileText className="w-5 h-5 text-[#1B4965]" />
+          <div className="w-10 h-10 rounded-lg bg-[#D4A64A]/10 flex items-center justify-center">
+            <FileText className="w-5 h-5 text-[#D4A64A]" />
           </div>
           <div>
             <h4 className="font-bold text-foreground text-sm">عقد التمويل</h4>
@@ -218,7 +218,7 @@ function ContractCard({
       <div className="p-3">
         <button
           onClick={() => onAction?.('view_contract')}
-          className="w-full bg-[#1B4965] text-white text-sm font-medium py-2.5 rounded-lg active:scale-[0.98] transition-transform"
+          className="w-full bg-[#D4A64A] text-white text-sm font-medium py-2.5 rounded-lg active:scale-[0.98] transition-transform"
         >
           عرض العقد الكامل
         </button>
@@ -256,13 +256,13 @@ function ActionCard({
         <div className="flex items-center gap-3 mb-3">
           <div
             className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-              completed ? 'bg-green-100' : 'bg-[#1B4965]/10'
+              completed ? 'bg-green-100' : 'bg-[#D4A64A]/10'
             }`}
           >
             {completed ? (
               <CheckCircle2 className="w-5 h-5 text-green-600" />
             ) : (
-              <Icon className="w-5 h-5 text-[#1B4965]" />
+              <Icon className="w-5 h-5 text-[#D4A64A]" />
             )}
           </div>
           <div>
@@ -274,7 +274,7 @@ function ActionCard({
         {!completed && (
           <button
             onClick={() => onAction?.(actionName)}
-            className="w-full bg-[#1B4965] text-white text-sm font-medium py-2.5 rounded-lg active:scale-[0.98] transition-transform"
+            className="w-full bg-[#D4A64A] text-white text-sm font-medium py-2.5 rounded-lg active:scale-[0.98] transition-transform"
           >
             {buttonText}
           </button>
@@ -329,7 +329,7 @@ function PaymentScheduleCard({ payload }: { payload: Record<string, unknown> }) 
     <div className="bg-white rounded-xl border border-border/60 shadow-sm overflow-hidden" dir="rtl">
       <div className="p-4 bg-[#F8F5F0]">
         <div className="flex items-center gap-2 mb-2">
-          <Calendar className="w-4 h-4 text-[#1B4965]" />
+          <Calendar className="w-4 h-4 text-[#D4A64A]" />
           <span className="font-bold text-foreground text-sm">جدول السداد</span>
         </div>
       </div>
@@ -348,7 +348,7 @@ function PaymentScheduleCard({ payload }: { payload: Record<string, unknown> }) 
         </div>
         <div className="flex justify-between border-t border-border pt-3">
           <span className="text-muted-foreground text-sm">الرصيد المتبقي</span>
-          <span className="font-bold text-[#1B4965]">{formatCurrency(remainingBalance)} ر.س</span>
+          <span className="font-bold text-[#D4A64A]">{formatCurrency(remainingBalance)} ر.س</span>
         </div>
       </div>
     </div>
@@ -367,10 +367,10 @@ function RevalCurrentValueCard({ payload }: { payload: Record<string, unknown> }
 
   return (
     <div className="bg-white rounded-xl border border-border/60 shadow-sm overflow-hidden" dir="rtl">
-      <div className="bg-gradient-to-l from-[#C4956A]/20 to-[#C4956A]/5 p-4">
+      <div className="bg-gradient-to-l from-[#D4A64A]/20 to-[#D4A64A]/5 p-4">
         <div className="flex items-center gap-3 mb-3">
-          <div className="w-10 h-10 rounded-lg bg-[#C4956A]/20 flex items-center justify-center">
-            <TrendingUp className="w-5 h-5 text-[#C4956A]" />
+          <div className="w-10 h-10 rounded-lg bg-[#D4A64A]/20 flex items-center justify-center">
+            <TrendingUp className="w-5 h-5 text-[#D4A64A]" />
           </div>
           <div>
             <h4 className="font-bold text-foreground text-sm">التقييم الحالي</h4>
@@ -381,7 +381,7 @@ function RevalCurrentValueCard({ payload }: { payload: Record<string, unknown> }
       <div className="p-4 space-y-3">
         <div className="flex justify-between items-center">
           <span className="text-muted-foreground text-sm">القيمة التقديرية</span>
-          <span className="font-bold text-[#1B4965] text-lg">{formatCurrency(currentValue)} ر.س</span>
+          <span className="font-bold text-[#D4A64A] text-lg">{formatCurrency(currentValue)} ر.س</span>
         </div>
         <div className="flex justify-between items-center">
           <span className="text-muted-foreground text-sm flex items-center gap-1">
@@ -422,9 +422,9 @@ function RevalTimeSlotPickerCard({
 
   return (
     <div className="bg-white rounded-xl border border-border/60 shadow-sm overflow-hidden" dir="rtl">
-      <div className="bg-gradient-to-l from-[#1B4965]/10 to-[#1B4965]/5 p-4">
+      <div className="bg-gradient-to-l from-[#D4A64A]/10 to-[#D4A64A]/5 p-4">
         <div className="flex items-center gap-2 mb-1">
-          <Calendar className="w-4 h-4 text-[#1B4965]" />
+          <Calendar className="w-4 h-4 text-[#D4A64A]" />
           <span className="font-bold text-foreground text-sm">اختر موعد الزيارة</span>
         </div>
         <p className="text-xs text-muted-foreground">اختر الموعد المناسب لزيارة المقيّم المعتمد</p>
@@ -444,8 +444,8 @@ function RevalTimeSlotPickerCard({
                     onClick={() => setSelectedSlotId(slot.id)}
                     className={`py-2.5 px-3 rounded-lg text-xs font-medium border-2 transition-all ${
                       isSelected
-                        ? 'border-[#1B4965] bg-[#1B4965]/10 text-[#1B4965]'
-                        : 'border-border/60 bg-white text-foreground hover:border-[#1B4965]/30'
+                        ? 'border-[#D4A64A] bg-[#D4A64A]/10 text-[#D4A64A]'
+                        : 'border-border/60 bg-white text-foreground hover:border-[#D4A64A]/30'
                     }`}
                   >
                     <div className="flex items-center justify-center gap-1">
@@ -474,7 +474,7 @@ function RevalTimeSlotPickerCard({
           disabled={!selectedSlotId}
           className={`w-full text-sm font-bold py-3 rounded-xl transition-all active:scale-[0.97] ${
             selectedSlotId
-              ? 'bg-[#1B4965] text-white shadow-md'
+              ? 'bg-[#D4A64A] text-white shadow-md'
               : 'bg-gray-200 text-gray-400 cursor-not-allowed'
           }`}
         >
@@ -498,7 +498,7 @@ function RevalBookingSummaryCard({ payload }: { payload: Record<string, unknown>
 
   return (
     <div className="bg-white rounded-xl border border-border/60 shadow-sm overflow-hidden" dir="rtl">
-      <div className="bg-gradient-to-l from-[#C4956A] to-[#D4A574] p-4 text-center">
+      <div className="bg-gradient-to-l from-[#D4A64A] to-[#D4A574] p-4 text-center">
         <Calendar className="w-8 h-8 text-white mx-auto mb-2" />
         <h3 className="text-white font-bold text-base">تأكيد موعد التقييم</h3>
       </div>
@@ -523,7 +523,7 @@ function RevalBookingSummaryCard({ payload }: { payload: Record<string, unknown>
           <span className="text-muted-foreground text-sm flex items-center gap-1">
             <CreditCard className="w-3 h-3" /> رسوم التقييم
           </span>
-          <span className="font-bold text-[#C4956A] text-lg">{formatCurrency(fee)} ر.س</span>
+          <span className="font-bold text-[#D4A64A] text-lg">{formatCurrency(fee)} ر.س</span>
         </div>
       </div>
     </div>
@@ -550,7 +550,7 @@ function RevalBookingSuccessCard({ payload }: { payload: Record<string, unknown>
       <div className="p-4 space-y-3">
         <div className="flex justify-between items-center">
           <span className="text-muted-foreground text-sm">رقم المرجع</span>
-          <span className="font-bold text-[#1B4965] font-mono">{referenceNumber}</span>
+          <span className="font-bold text-[#D4A64A] font-mono">{referenceNumber}</span>
         </div>
         <div className="flex justify-between items-center">
           <span className="text-muted-foreground text-sm">العقار</span>
@@ -587,24 +587,24 @@ function PropertiesListCard({ payload }: { payload: Record<string, unknown> }) {
 
   return (
     <div className="bg-white rounded-xl border border-border/60 shadow-sm overflow-hidden" dir="rtl">
-      <div className="bg-gradient-to-l from-[#1B4965]/10 to-[#1B4965]/5 p-4">
+      <div className="bg-gradient-to-l from-[#D4A64A]/10 to-[#D4A64A]/5 p-4">
         <div className="flex items-center gap-2">
-          <Building2 className="w-4 h-4 text-[#1B4965]" />
+          <Building2 className="w-4 h-4 text-[#D4A64A]" />
           <span className="font-bold text-foreground text-sm">عقاراتي</span>
         </div>
       </div>
       <div className="divide-y divide-border/50">
         {properties.map((p) => (
           <div key={p.id} className="p-3 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-[#1B4965]/10 flex items-center justify-center flex-shrink-0">
-              <Building2 className="w-5 h-5 text-[#1B4965]/50" />
+            <div className="w-10 h-10 rounded-lg bg-[#D4A64A]/10 flex items-center justify-center flex-shrink-0">
+              <Building2 className="w-5 h-5 text-[#D4A64A]/50" />
             </div>
             <div className="flex-1 min-w-0">
               <p className="font-bold text-foreground text-sm truncate">{p.title}</p>
               <p className="text-xs text-muted-foreground">{p.location}</p>
             </div>
             <div className="text-left flex-shrink-0">
-              <p className="font-bold text-[#1B4965] text-sm">{formatCurrency(p.estimatedValue)}</p>
+              <p className="font-bold text-[#D4A64A] text-sm">{formatCurrency(p.estimatedValue)}</p>
               <p className="text-[10px] text-muted-foreground">ر.س</p>
             </div>
           </div>
@@ -637,9 +637,9 @@ function LoansListCard({ payload }: { payload: Record<string, unknown> }) {
 
   return (
     <div className="bg-white rounded-xl border border-border/60 shadow-sm overflow-hidden" dir="rtl">
-      <div className="bg-gradient-to-l from-[#1B4965]/10 to-[#1B4965]/5 p-4">
+      <div className="bg-gradient-to-l from-[#D4A64A]/10 to-[#D4A64A]/5 p-4">
         <div className="flex items-center gap-2">
-          <Wallet className="w-4 h-4 text-[#1B4965]" />
+          <Wallet className="w-4 h-4 text-[#D4A64A]" />
           <span className="font-bold text-foreground text-sm">تمويلاتي</span>
         </div>
       </div>
@@ -698,7 +698,7 @@ function CreditSummaryCard({ payload }: { payload: Record<string, unknown> }) {
 
   return (
     <div className="bg-white rounded-xl border border-border/60 shadow-sm overflow-hidden" dir="rtl">
-      <div className="bg-gradient-to-l from-[#1B4965] to-[#2D5A7B] p-4 text-center">
+      <div className="bg-gradient-to-l from-[#2A2A2A] to-[#3D3D3D] p-4 text-center">
         <TrendingUp className="w-8 h-8 text-white mx-auto mb-2" />
         <p className="text-white/80 text-xs">تقييمي الائتماني</p>
         <p className="text-4xl font-bold text-white mt-1">{score}</p>
@@ -748,13 +748,13 @@ function AccordionSection({
 }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
-    <div className={`border-b border-border/40 last:border-0 ${highlight ? 'bg-[#FFF8F0]' : ''}`}>
+    <div className={`border-b border-border/40 last:border-0 ${highlight ? 'bg-[#FAF6EE]' : ''}`}>
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between px-4 py-3"
         dir="rtl"
       >
-        <span className={`font-bold text-sm ${highlight ? 'text-[#C4956A]' : 'text-foreground'}`}>{title}</span>
+        <span className={`font-bold text-sm ${highlight ? 'text-[#D4A64A]' : 'text-foreground'}`}>{title}</span>
         {open ? (
           <ChevronUp className="w-4 h-4 text-muted-foreground flex-shrink-0" />
         ) : (
@@ -803,7 +803,7 @@ function TermsAndConditionsCard({
       {/* Header */}
       <div className="p-4 text-center border-b border-border/40 bg-[#F8F5F0]">
         <div className="flex items-center justify-center gap-2 mb-1">
-          <FileText className="w-5 h-5 text-[#1B4965]" />
+          <FileText className="w-5 h-5 text-[#D4A64A]" />
           <h3 className="font-bold text-foreground text-base">عقد تمويل مرابحة عقارية</h3>
         </div>
         <p className="text-xs text-muted-foreground">رقم العقد: ASL-2026-XXXXX</p>
@@ -813,7 +813,7 @@ function TermsAndConditionsCard({
       <div className="grid grid-cols-3 gap-0 border-b border-border/40">
         <div className="p-3 text-center border-l border-border/40">
           <p className="text-[10px] text-muted-foreground mb-0.5">مبلغ التمويل</p>
-          <p className="font-bold text-[#1B4965] text-sm">{formatCurrency(loanAmount)} ر.س</p>
+          <p className="font-bold text-[#D4A64A] text-sm">{formatCurrency(loanAmount)} ر.س</p>
         </div>
         <div className="p-3 text-center border-l border-border/40">
           <p className="text-[10px] text-muted-foreground mb-0.5">المدة</p>
@@ -854,12 +854,12 @@ function TermsAndConditionsCard({
       </AccordionSection>
 
       {/* Important note */}
-      <div className="mx-4 my-3 p-3 bg-[#FFF8F0] border border-[#C4956A]/30 rounded-lg" dir="rtl">
+      <div className="mx-4 my-3 p-3 bg-[#FAF6EE] border border-[#D4A64A]/30 rounded-lg" dir="rtl">
         <div className="flex items-start gap-2">
-          <AlertCircle className="w-4 h-4 text-[#C4956A] flex-shrink-0 mt-0.5" />
+          <AlertCircle className="w-4 h-4 text-[#D4A64A] flex-shrink-0 mt-0.5" />
           <div>
-            <p className="text-xs font-bold text-[#C4956A] mb-1">خطوة مهمة</p>
-            <p className="text-xs text-[#C4956A]/80">بعد الموافقة على العقد، سيُطلب منك اعتماد/توقيع صك الرهن عبر منصة ناجز</p>
+            <p className="text-xs font-bold text-[#D4A64A] mb-1">خطوة مهمة</p>
+            <p className="text-xs text-[#D4A64A]/80">بعد الموافقة على العقد، سيُطلب منك اعتماد/توقيع صك الرهن عبر منصة ناجز</p>
           </div>
         </div>
       </div>
@@ -871,7 +871,7 @@ function TermsAndConditionsCard({
           className="flex items-start gap-3 w-full text-right"
         >
           <div className={`w-5 h-5 rounded border-2 flex-shrink-0 mt-0.5 flex items-center justify-center transition-colors ${
-            agreed ? 'bg-[#1B4965] border-[#1B4965]' : 'border-gray-300 bg-white'
+            agreed ? 'bg-[#D4A64A] border-[#D4A64A]' : 'border-gray-300 bg-white'
           }`}>
             {agreed && <CheckCircle2 className="w-3 h-3 text-white" />}
           </div>
@@ -889,7 +889,7 @@ function TermsAndConditionsCard({
           disabled={!agreed}
           className={`w-full py-3 rounded-xl text-sm font-bold transition-all active:scale-[0.97] flex items-center justify-center gap-2 ${
             agreed
-              ? 'bg-[#1B4965] text-white shadow-md'
+              ? 'bg-[#D4A64A] text-white shadow-md'
               : 'bg-gray-200 text-gray-400 cursor-not-allowed'
           }`}
         >
@@ -934,8 +934,8 @@ function FullContractCard({
       {/* Contract title card */}
       <div className="m-3 p-4 bg-[#F8F5F0] rounded-xl">
         <div className="flex items-center gap-3 mb-3">
-          <div className="w-10 h-10 rounded-lg bg-[#1B4965]/10 flex items-center justify-center">
-            <FileText className="w-5 h-5 text-[#1B4965]" />
+          <div className="w-10 h-10 rounded-lg bg-[#D4A64A]/10 flex items-center justify-center">
+            <FileText className="w-5 h-5 text-[#D4A64A]" />
           </div>
           <div>
             <h3 className="font-bold text-foreground text-base">عقد تمويل مرابحة</h3>
@@ -948,7 +948,7 @@ function FullContractCard({
           <div className="grid grid-cols-2 gap-3">
             <div>
               <p className="text-[10px] text-muted-foreground">مبلغ التمويل</p>
-              <p className="font-bold text-[#1B4965] text-sm">{formatCurrency(loanAmount)} ر.س</p>
+              <p className="font-bold text-[#D4A64A] text-sm">{formatCurrency(loanAmount)} ر.س</p>
             </div>
             <div>
               <p className="text-[10px] text-muted-foreground">المدة</p>
@@ -991,12 +991,12 @@ function FullContractCard({
       </AccordionSection>
 
       {/* Important note */}
-      <div className="mx-4 my-3 p-3 bg-[#FFF8F0] border border-[#C4956A]/30 rounded-lg">
+      <div className="mx-4 my-3 p-3 bg-[#FAF6EE] border border-[#D4A64A]/30 rounded-lg">
         <div className="flex items-start gap-2">
-          <AlertCircle className="w-4 h-4 text-[#C4956A] flex-shrink-0 mt-0.5" />
+          <AlertCircle className="w-4 h-4 text-[#D4A64A] flex-shrink-0 mt-0.5" />
           <div>
-            <p className="text-xs font-bold text-[#C4956A] mb-1">خطوة مهمة</p>
-            <p className="text-xs text-[#C4956A]/80">بعد الموافقة على العقد، سيُطلب منك اعتماد/توقيع صك الرهن عبر منصة ناجز</p>
+            <p className="text-xs font-bold text-[#D4A64A] mb-1">خطوة مهمة</p>
+            <p className="text-xs text-[#D4A64A]/80">بعد الموافقة على العقد، سيُطلب منك اعتماد/توقيع صك الرهن عبر منصة ناجز</p>
           </div>
         </div>
       </div>
@@ -1008,7 +1008,7 @@ function FullContractCard({
           className="flex items-start gap-3 w-full text-right"
         >
           <div className={`w-5 h-5 rounded border-2 flex-shrink-0 mt-0.5 flex items-center justify-center transition-colors ${
-            agreed ? 'bg-[#1B4965] border-[#1B4965]' : 'border-gray-300 bg-white'
+            agreed ? 'bg-[#D4A64A] border-[#D4A64A]' : 'border-gray-300 bg-white'
           }`}>
             {agreed && <CheckCircle2 className="w-3 h-3 text-white" />}
           </div>
@@ -1026,7 +1026,7 @@ function FullContractCard({
           disabled={!agreed}
           className={`w-full py-3 rounded-xl text-sm font-bold transition-all active:scale-[0.97] flex items-center justify-center gap-2 ${
             agreed
-              ? 'bg-[#1B4965] text-white shadow-md'
+              ? 'bg-[#D4A64A] text-white shadow-md'
               : 'bg-gray-200 text-gray-400 cursor-not-allowed'
           }`}
         >
@@ -1111,7 +1111,7 @@ function NajizSigningFlowCard({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, x: -50 }}
             transition={{ duration: 0.3 }}
-            className="bg-gradient-to-b from-[#1B4965] to-[#2D5A7B] p-6"
+            className="bg-gradient-to-b from-[#1A1A2E] to-[#2A2A3E] p-6"
           >
             {/* Najiz logo */}
             <div className="flex justify-center mb-5">
@@ -1151,7 +1151,7 @@ function NajizSigningFlowCard({
             {/* Open Najiz button */}
             <button
               onClick={handleOpenNajiz}
-              className="w-full bg-white text-[#1B4965] font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 active:scale-[0.97] transition-transform mb-2"
+              className="w-full bg-white text-[#D4A64A] font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 active:scale-[0.97] transition-transform mb-2"
             >
               <span>فتح ناجز</span>
               <ExternalLink className="w-4 h-4" />
@@ -1175,7 +1175,7 @@ function NajizSigningFlowCard({
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="bg-gradient-to-b from-[#1B4965] to-[#2D5A7B] p-6"
+            className="bg-gradient-to-b from-[#1A1A2E] to-[#2A2A3E] p-6"
           >
             {/* Circular countdown */}
             <div className="flex justify-center mb-5">
@@ -1230,7 +1230,7 @@ function NajizSigningFlowCard({
             {/* Primary CTA: Approved */}
             <button
               onClick={handleNajizApproved}
-              className="w-full bg-white text-[#1B4965] font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 active:scale-[0.97] transition-transform mb-3 shadow-lg"
+              className="w-full bg-white text-[#D4A64A] font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 active:scale-[0.97] transition-transform mb-3 shadow-lg"
             >
               <CheckCircle2 className="w-5 h-5 text-green-600" />
               <span>تمت الموافقة في ناجز؟ اضغط هنا</span>
@@ -1302,7 +1302,7 @@ function ShariaVisualizationCard({
   return (
     <div className="rounded-xl overflow-hidden shadow-lg" dir="rtl">
       {/* Dark teal header with logo */}
-      <div className="bg-gradient-to-b from-[#1B4965] to-[#2D5A7B] p-5 text-center">
+      <div className="bg-gradient-to-b from-[#1A1A2E] to-[#2A2A3E] p-5 text-center">
         {/* Logo placeholder */}
         <div className="w-14 h-14 mx-auto mb-3 rounded-xl bg-white/15 backdrop-blur-sm flex items-center justify-center">
           <Scale className="w-7 h-7 text-white" />
@@ -1407,7 +1407,7 @@ function ShariaVisualizationCard({
             <div className="p-3">
               <button
                 onClick={() => onAction?.('confirm_disbursement')}
-                className="w-full bg-[#1B4965] text-white font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 active:scale-[0.97] transition-transform shadow-md"
+                className="w-full bg-[#D4A64A] text-white font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 active:scale-[0.97] transition-transform shadow-md"
               >
                 <span>متابعة لصرف السيولة</span>
                 <span className="text-lg">←</span>

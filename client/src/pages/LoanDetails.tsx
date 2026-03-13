@@ -73,7 +73,7 @@ export default function LoanDetails() {
     <AppLayout showNav={false}>
       <div className="min-h-screen bg-background">
         {/* Header */}
-        <div className="bg-gradient-to-b from-[#1B4965] to-[#2D6A8A] text-white px-5 pt-4 pb-8 safe-area-top">
+        <div className="bg-gradient-to-b from-[#D4A64A] to-[#C9952F] text-white px-5 pt-4 pb-8 safe-area-top">
           <div className="flex items-center gap-4 mb-6">
             <button
               onClick={handleBack}

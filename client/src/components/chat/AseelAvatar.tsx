@@ -24,7 +24,7 @@ export default function AseelAvatar({ size = 'md', animate = false }: AseelAvata
   return (
     <Wrapper
       {...(animationProps as any)}
-      className={`${sizeClasses[size]} rounded-full bg-gradient-to-br from-[#1B4965] to-[#2D5A7B] flex items-center justify-center flex-shrink-0 shadow-md`}
+      className={`${sizeClasses[size]} rounded-full bg-gradient-to-br from-[#D4A64A] to-[#B6831F] flex items-center justify-center flex-shrink-0 shadow-md`}
     >
       <span className="text-white font-bold" style={{ fontFamily: "'IBM Plex Sans Arabic', sans-serif" }}>
         أ

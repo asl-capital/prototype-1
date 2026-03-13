@@ -78,7 +78,7 @@ export default function InstantDecision() {
   if (isRevealing) {
     return (
       <AppLayout showNav={false}>
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#1B4965] to-[#2D5A7B]">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#D4A64A] to-[#B6831F]">
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}

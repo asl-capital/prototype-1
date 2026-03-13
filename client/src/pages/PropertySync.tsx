@@ -57,7 +57,7 @@ export default function PropertySync() {
   };
   
   return (
-    <div className="app-shell bg-gradient-to-b from-[#1B4965] to-[#2D5A7B] min-h-screen relative overflow-hidden">
+    <div className="app-shell bg-gradient-to-b from-[#D4A64A] to-[#B6831F] min-h-screen relative overflow-hidden">
       {/* Geometric pattern overlay */}
       <div 
         className="absolute inset-0 opacity-5"
@@ -104,7 +104,7 @@ export default function PropertySync() {
               <div className="w-full max-w-xs mx-auto">
                 <div className="h-2 bg-white/20 rounded-full overflow-hidden">
                   <motion.div
-                    className="h-full bg-[#C4956A] rounded-full"
+                    className="h-full bg-[#D4A64A] rounded-full"
                     initial={{ width: 0 }}
                     animate={{ width: `${progress}%` }}
                     transition={{ duration: 0.5 }}
@@ -168,7 +168,7 @@ export default function PropertySync() {
               
               <button
                 onClick={handleRetry}
-                className="bg-white text-[#1B4965] font-semibold py-4 px-8 rounded-xl flex items-center justify-center gap-2 mx-auto"
+                className="bg-white text-[#D4A64A] font-semibold py-4 px-8 rounded-xl flex items-center justify-center gap-2 mx-auto"
               >
                 <RefreshCw className="w-5 h-5" />
                 <span>إعادة المحاولة</span>

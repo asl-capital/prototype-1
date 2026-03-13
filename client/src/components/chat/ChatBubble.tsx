@@ -38,11 +38,11 @@ function CTAButtons({
             'bg-gradient-to-l from-green-500 to-green-600 text-white shadow-md shadow-green-500/25';
         } else if (btn.variant === 'secondary') {
           variantClasses =
-            'bg-white border-2 border-[#1B4965] text-[#1B4965]';
+            'bg-white border-2 border-[#D4A64A] text-[#D4A64A]';
         } else {
           // primary
           variantClasses =
-            'bg-gradient-to-l from-[#1B4965] to-[#2D6A8A] text-white shadow-md shadow-[#1B4965]/25';
+            'bg-gradient-to-l from-[#D4A64A] to-[#C9952F] text-white shadow-md shadow-[#D4A64A]/25';
         }
 
         return (
@@ -94,7 +94,7 @@ export default function ChatBubble({ message, onCardAction, onCTAAction }: ChatB
             className={`rounded-2xl px-4 py-3 text-[15px] leading-relaxed whitespace-pre-wrap ${
               isAssistant
                 ? 'bg-white text-foreground shadow-sm border border-border/50 rounded-tr-md'
-                : 'bg-[#1B4965] text-white rounded-tl-md'
+                : 'bg-[#2A2A2A] text-white rounded-tl-md'
             }`}
             style={{ textAlign: rtl ? 'right' : 'left' }}
           >

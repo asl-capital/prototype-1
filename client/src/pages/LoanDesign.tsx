@@ -243,10 +243,10 @@ export default function LoanDesign() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="card-floating bg-[#1B4965]/5 border border-[#1B4965]/20"
+            className="card-floating bg-[#D4A64A]/5 border border-[#D4A64A]/20"
           >
             <div className="flex items-start gap-3 mb-4">
-              <div className="w-10 h-10 rounded-full bg-[#1B4965]/10 flex items-center justify-center flex-shrink-0">
+              <div className="w-10 h-10 rounded-full bg-[#D4A64A]/10 flex items-center justify-center flex-shrink-0">
                 <img src="/images/sharia-illustration.png" alt="" className="w-6 h-6" />
               </div>
               <div>
@@ -261,7 +261,7 @@ export default function LoanDesign() {
             <div className="space-y-3 mb-4">
               {shariaSteps.slice(0, 3).map((item, index) => (
                 <div key={item.step} className="flex items-center gap-3">
-                  <div className="w-6 h-6 rounded-full bg-[#1B4965] text-white text-xs flex items-center justify-center flex-shrink-0">
+                  <div className="w-6 h-6 rounded-full bg-[#D4A64A] text-white text-xs flex items-center justify-center flex-shrink-0">
                     {item.step}
                   </div>
                   <p className="text-sm text-foreground">{item.title}</p>
@@ -280,7 +280,7 @@ export default function LoanDesign() {
             {/* Expand button */}
             <button
               onClick={() => setShowShariaDetails(true)}
-              className="w-full flex items-center justify-center gap-2 text-[#1B4965] font-medium py-2"
+              className="w-full flex items-center justify-center gap-2 text-[#D4A64A] font-medium py-2"
             >
               <span>تفاصيل الهيكلة الشرعية</span>
               <ChevronDown className="w-4 h-4" />
@@ -337,11 +337,11 @@ export default function LoanDesign() {
                     {shariaSteps.map((item, index) => (
                       <div key={item.step} className="flex gap-4">
                         <div className="flex flex-col items-center">
-                          <div className="w-8 h-8 rounded-full bg-[#1B4965] text-white text-sm flex items-center justify-center flex-shrink-0">
+                          <div className="w-8 h-8 rounded-full bg-[#D4A64A] text-white text-sm flex items-center justify-center flex-shrink-0">
                             {item.step}
                           </div>
                           {index < shariaSteps.length - 1 && (
-                            <div className="w-0.5 h-full bg-[#1B4965]/20 mt-2" />
+                            <div className="w-0.5 h-full bg-[#D4A64A]/20 mt-2" />
                           )}
                         </div>
                         <div className="pb-6">

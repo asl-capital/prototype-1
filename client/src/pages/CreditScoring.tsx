@@ -134,7 +134,7 @@ export default function CreditScoring() {
   };
 
   return (
-    <div className="app-shell bg-gradient-to-b from-[#1B4965] to-[#2D5A7B] min-h-screen relative overflow-hidden">
+    <div className="app-shell bg-gradient-to-b from-[#1A1A2E] to-[#2A2A3E] min-h-screen relative overflow-hidden">
       {/* Geometric pattern overlay */}
       <div
         className="absolute inset-0 opacity-5"
@@ -200,7 +200,7 @@ export default function CreditScoring() {
                         step.completed
                           ? 'bg-green-500/20'
                           : step.active
-                          ? 'bg-[#C4956A]/20'
+                          ? 'bg-[#D4A64A]/20'
                           : 'bg-white/10'
                       }`}>
                         {step.completed ? (
@@ -216,7 +216,7 @@ export default function CreditScoring() {
                             animate={{ rotate: 360 }}
                             transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
                           >
-                            <Icon className="w-5 h-5 text-[#C4956A]" />
+                            <Icon className="w-5 h-5 text-[#D4A64A]" />
                           </motion.div>
                         ) : (
                           <Icon className="w-5 h-5 text-white/30" />
@@ -290,7 +290,7 @@ export default function CreditScoring() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4 }}
                     onClick={handleContinue}
-                    className="w-full bg-[#C4956A] text-white font-semibold py-4 px-6 rounded-xl flex items-center justify-center gap-3 hover:bg-[#B38559] transition-colors active:scale-[0.97]"
+                    className="w-full bg-[#D4A64A] text-white font-semibold py-4 px-6 rounded-xl flex items-center justify-center gap-3 hover:bg-[#C9952F] transition-colors active:scale-[0.97]"
                   >
                     ابدأ رحلة التمويل مع أصيل
                   </motion.button>

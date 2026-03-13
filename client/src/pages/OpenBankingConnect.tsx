@@ -66,7 +66,7 @@ export default function OpenBankingConnect() {
     <AppLayout showNav={false}>
       <div className="min-h-screen">
         {/* Header */}
-        <div className="bg-gradient-to-b from-[#1B4965] to-[#2D5A7B] pt-4 pb-20 px-5 relative overflow-hidden safe-area-top">
+        <div className="bg-gradient-to-b from-[#D4A64A] to-[#B6831F] pt-4 pb-20 px-5 relative overflow-hidden safe-area-top">
           <div 
             className="absolute inset-0 opacity-5"
             style={{

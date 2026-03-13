@@ -36,20 +36,20 @@ export default function ChatBottomNav({ activeTab, onTabChange }: ChatBottomNavP
             {isActive && (
               <motion.div
                 layoutId="nav-indicator"
-                className="absolute -top-0.5 w-5 h-0.5 rounded-full bg-[#C4956A]"
+                className="absolute -top-0.5 w-5 h-0.5 rounded-full bg-[#D4A64A]"
                 transition={{ type: 'spring', stiffness: 400, damping: 30 }}
               />
             )}
 
             <Icon
               className={`w-5 h-5 transition-colors duration-200 ${
-                isActive ? 'text-[#1B4965]' : 'text-muted-foreground'
+                isActive ? 'text-[#D4A64A]' : 'text-muted-foreground'
               }`}
               strokeWidth={isActive ? 2.5 : 1.8}
             />
             <span
               className={`text-[10px] font-medium transition-colors duration-200 ${
-                isActive ? 'text-[#1B4965]' : 'text-muted-foreground'
+                isActive ? 'text-[#D4A64A]' : 'text-muted-foreground'
               }`}
             >
               {item.label}
