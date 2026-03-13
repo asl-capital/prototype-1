@@ -940,6 +940,7 @@ Do NOT ask "do you have a question?" — the user already asked one, just answer
               : 'E-signature completed successfully via Najiz! Next step is the Sharia execution of the Tawarruq/Murabaha contract.';
 
             await addAssistantMessageAnimated(successContent, undefined, cta);
+            setIsLoading(false);
             break;
           }
 

@@ -1227,20 +1227,19 @@ function NajizSigningFlowCard({
               <span className="text-white/60 text-sm">جاري التحقق من حالة التوقيع...</span>
             </div>
 
-            {/* Approved link */}
+            {/* Primary CTA: Approved */}
             <button
               onClick={handleNajizApproved}
-              className="w-full text-center mb-5"
+              className="w-full bg-white text-[#1B4965] font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 active:scale-[0.97] transition-transform mb-3 shadow-lg"
             >
-              <span className="text-white/90 text-sm underline underline-offset-4 decoration-white/40">
-                تمت الموافقة في ناجز؟ اضغط هنا
-              </span>
+              <CheckCircle2 className="w-5 h-5 text-green-600" />
+              <span>تمت الموافقة في ناجز؟ اضغط هنا</span>
             </button>
 
-            {/* Cancel */}
+            {/* Secondary: Cancel */}
             <button
               onClick={handleCancel}
-              className="w-full bg-white/10 text-white/80 font-medium py-3 rounded-xl active:scale-[0.97] transition-transform"
+              className="w-full bg-transparent border border-white/20 text-white/50 font-medium py-2.5 rounded-xl active:scale-[0.97] transition-transform text-sm"
             >
               إلغاء
             </button>
